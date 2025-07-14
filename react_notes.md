@@ -6,13 +6,8 @@
 
 # To create an app
 1) make a repo on github
-2) in CLI: ```npm create vite@latest my-first-react-app -- --template react```
+2) in CLI: 'npx create-react-app <name of app>'
 3) press y to install create vite packages
-4) cd app_name
-5) npm install
-6) npm run dev
-7) npm create vite@latest . -- --template react
-    **Replace the dot with the name of the app given**
 
 # Vite
 - a built tool that aims to provide faster development experience for web projects
@@ -453,3 +448,122 @@ Steps:
 5) The useState Hook returns a pair of values: the current state and the function to update it.
 6) You can have more than one state variable. Internally, React matches them up by their order.
 7) State is private to the component. If you render it in two places, each copy gets its own state.
+
+## Render and commit
+
+### steps
+1) trigger a render
+2) render the component
+3) commit to the DOM
+
+#### Step 1 - trigger a render
+- 2 reasons for a component to render
+  1) its the components initial render
+  2) the component state has been updated
+
+- you call the createRoot with the target DOM node then call render method on it, e.g.
+```
+import Image from './Image.js';
+import { createRoot } from 'react-dom/client';
+
+const root = createRoot(document.getElementById('root'))
+root.render(<Image />);
+```
+
+#### Step 2 - React renders your components
+- **rendering is React calling your components**
+- on initial render - React will call root component
+- for subsequent renders - React will call function component whose state update triggered the render
+- React will recursively update components until all nested components are displayed
+
+#### Step 3 - React commits changes to the DOM
+- after rendering the components, React will modify the DOM:
+  - after initial render React will use ```appendChild``` DOM API to put all DOM nodes it created on screen
+  - for re render, React will apply the minimum necessary operations to make the DOM match the rendering output
+
+# More on State
+
+## How to structure state
+- **Dont put values in state that can be calculated using existing values, state, or props**
+- state should not be mutated, so dont mutate arrays or objects
+- always use a setState function to change state! and create a new object for this setState to trigger a re render
+- state updates are asynchronous
+- during re render, the state stays the same until it is done and then the state is updated to the new value. see here:
+```
+function Person() {
+  const [person, setPerson] = useState({ name: "John", age: 100 });
+
+  const handleIncreaseAge = () => {
+    // shows {name: "john", age:100}
+    console.log("in handleIncreaseAge (before setPerson call): ", person);
+    setPerson({ ...person, age: person.age + 1 });
+    // we've called setPerson but the second console log will still show {name: "john", age:100}
+    console.log("in handleIncreaseAge (after setPerson call): ", person);
+  };
+
+  // this console.log runs every time the component renders
+  // this logs {name: "john", age:100} on initial render, then {name: "john", age:101} when the component re renders after clicking the button
+  console.log("during render: ", person);
+
+  return (
+    <>
+      <h1>{person.name}</h1>
+      <h2>{person.age}</h2>
+      <button onClick={handleIncreaseAge}>Increase age</button>
+    </>
+  );
+}
+```
+
+## State updater functions
+- state variables are taken as a snapshot when re rendering and wont change throughout the render
+- in the following, you would expect age to up by 2 but it doesnt! because it basically sats to take the current state and add 1, then take that original state again and still only add 1...
+```
+const handleIncreaseAge = () => {
+  setPerson({ ...person, age: person.age + 1 });
+  setPerson({ ...person, age: person.age + 1 });
+};
+```
+- if you want to update state multiple times using the latest state, use a callback function:
+```
+const handleIncreaseAge = () => {
+  setPerson((prevPerson) => ({ ...prevPerson, age: prevPerson.age + 1 }));
+  setPerson((prevPerson) => ({ ...prevPerson, age: prevPerson.age + 1 }));
+};
+```
+- usually setState would trigger a component re render, so in the code above, youd think it would re render twice but React is smart and would only render it once because it bactehs state updates
+
+## Controlled components
+- there are native HTML elements that maintain their own internal state, e.g. inputs elements!
+- you can use ```useState``` to control these elements yourself
+
+## Recap
+1) Setting state requests a new render.
+2) React stores state outside of your component, as if on a shelf.
+3) When you call useState, React gives you a snapshot of the state for that render.
+4) Variables and event handlers don’t “survive” re-renders. Every render has its own event handlers.
+5) Every render (and functions inside it) will always “see” the snapshot of the state that React gave to that render.
+6) You can mentally substitute state in event handlers, similarly to how you think about the rendered JSX.
+7) Event handlers created in the past have the state values from the render in which they were created.
+
+## Choosing the state Structure
+### Principles for structuring state
+1) Group related state. If you always update two or more state variables at the same time, consider merging them into a single state variable.
+2) Avoid contradictions in state. When the state is structured in a way that several pieces of state may contradict and “disagree” with each other, you leave room for mistakes. Try to avoid this.
+3) Avoid redundant state. If you can calculate some information from the component’s props or its existing state variables during rendering, you should not put that information into that component’s state.
+4) Avoid duplication in state. When the same data is duplicated between multiple state variables, or within nested objects, it is difficult to keep them in sync. Reduce duplication when you can.
+5) Avoid deeply nested state. Deeply hierarchical state is not very convenient to update. When possible, prefer to structure state in a flat way.
+
+
+# Sharing state between components
+- to change 2 components together, remove state from both of them, move to closest common parent and pass them down as props, AKA ***lifting state up***
+
+## Lifting state by example
+steps:
+1) Remove state from child components
+2) Pass hardcoded data from common parent
+3) Add state to the common parent and pass it down together with the event handlers
+
+
+# Emojis
+- to add emoji in code, press cmd + ctrl + spacebar
