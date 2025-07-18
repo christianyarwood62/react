@@ -29,11 +29,19 @@ export default function App() {
         item.id === id ? {...item, packed: !item.packed} : item));
   }
 
+  function handleDeleteList() {
+    const confirmed = window.confirm('Are you sure you want to clear the list?');
+
+    if (confirmed === true) {
+      setItems([]);
+    }
+  }
+
   // The components in the app, functions declared above are passed as props to each component below, prop naming is arbitrary
   return <div className="app">
     <Logo />
     <Form onAddItems={handleAddItems}/>
-    <PackingList items={items} onDeleteItem={handleDeleteItem} onToggleItem={handleToggleItem}/>
+    <PackingList items={items} onDeleteItem={handleDeleteItem} onToggleItem={handleToggleItem} onDeleteList={handleDeleteList}/>
     <Stats items={items}/>
   </div>
 }
@@ -88,20 +96,26 @@ function Form({onAddItems}) {
 }
 
 // React component for the packing list displayed under the form, using props for the functions declared at the top
-function PackingList({items, onDeleteItem, onToggleItem}) {
+function PackingList({items, onDeleteItem, onToggleItem, onDeleteList}) {
 
+  // State declaration to handle which sort by is applied
   const [sortBy, setSortBy] = useState('input');
 
+  // Initiliase an empty array to have as a copy for the items array, which we can apply a sort function
   let sortedItems;
 
+  // Let the sortedItems array be the items array as it was added
   if (sortBy === 'input') {
     sortedItems = items;
   }
   
+  // Use slice function to create a copy of items array
+  // localCompare compares the integer difference between the first letters
   if (sortBy === 'description') {
     sortedItems = items.slice().sort((a, b) => a.description.localeCompare(b.description));
   }
 
+  // 
   if (sortBy === 'packed') {
     sortedItems = items.slice().sort((a, b) => Number(a.packed) - Number(b.packed));
   }
@@ -121,6 +135,8 @@ function PackingList({items, onDeleteItem, onToggleItem}) {
           <option value='description'>Sort by description</option>
           <option value='packed'>Sort by packed status</option>
         </select>
+
+        <button onClick={onDeleteList}>Clear List</button>
       </div>
     </div>
   )
