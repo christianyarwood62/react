@@ -90,13 +90,27 @@ function Form({onAddItems}) {
 // React component for the packing list displayed under the form, using props for the functions declared at the top
 function PackingList({items, onDeleteItem, onToggleItem}) {
 
-  const [sortBy, setSortBy] = useState('input')
+  const [sortBy, setSortBy] = useState('input');
+
+  let sortedItems;
+
+  if (sortBy === 'input') {
+    sortedItems = items;
+  }
   
+  if (sortBy === 'description') {
+    sortedItems = items.slice().sort((a, b) => a.description.localeCompare(b.description));
+  }
+
+  if (sortBy === 'packed') {
+    sortedItems = items.slice().sort((a, b) => Number(a.packed) - Number(b.packed));
+  }
+
   return (
     <div className="list">
       <ul>
         {/* Uses the map function to run through each item in the item array and pass down some props */}
-        {items.map((item) => (
+        {sortedItems.map((item) => (
           <Item item={item} key={item.id} onDeleteItem={onDeleteItem} onToggleItem={onToggleItem}/>
         ))}
       </ul>
