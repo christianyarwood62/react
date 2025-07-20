@@ -240,6 +240,34 @@ function MonthList() {
     3) list wont be reordered or filtered
 
 # Passing Data between components
+- put props in the child function and use {props.xxx} to put data. Example:
+```
+function Menu() {
+  return (
+    <main className='menu'>
+      <h2>Our menu</h1>
+      <Pizza
+        name='hawaiian'
+        ingredients='cheeze, tomato, etc.'
+        photoName='pizzas/hawaiian.jpg'
+        price={10} // dont use '10' because that would make it a string, use javascript mode {} to make it a number
+      />
+    </main>
+  )
+}
+
+function Pizza(props) {
+  return (
+    <div>
+      <img src={props.photoName}/>
+      <h3>{props.name}</h3>
+      <p>{props.ingredients}p>
+      <span>{props.price}</span>
+    </div>
+  )
+}
+```
+
 - in react, data is transferred between parent components to child components via props, in a unidirectional way
 - to duplicate components with variations, e.g.:
 ```
