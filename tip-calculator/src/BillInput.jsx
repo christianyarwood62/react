@@ -1,8 +1,8 @@
-export default function BillInput() {
+export default function BillInput({text}) {
     return (
         <div>
             <span>
-                How much was the bill?
+                {text}
             </span>
             <input type="number">
                 
