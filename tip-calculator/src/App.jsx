@@ -11,7 +11,7 @@ function App() {
   const [percentage, setPercentage] = useState(0);
 
   function handleBillChange(e) {
-      setBill(Number(e.target.value))
+        setBill(Number(e.target.value))
   }
 
   function handlePercentage(e) {
