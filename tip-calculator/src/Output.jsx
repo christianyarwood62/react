@@ -1,7 +1,11 @@
-export default function Output() {
-    return (
-        <div>
-            text
-        </div>
-    )
+export default function Output({value}) {
+    if (value!=='') {
+        return (
+        
+            <div>
+                You pay £{value}
+            </div>
+        )
+    }
+    
 }

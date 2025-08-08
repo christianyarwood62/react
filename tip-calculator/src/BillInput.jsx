@@ -1,10 +1,11 @@
-export default function BillInput({text}) {
+export default function BillInput({text, value, onChange}) {
+
     return (
         <div>
             <span>
                 {text}
             </span>
-            <input type="number">
+            <input type="number" value={value} onChange={onChange}>
                 
             </input>
         </div>

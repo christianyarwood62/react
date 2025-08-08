@@ -1,11 +1,14 @@
-export default function SelectPercentage() {
+export default function SelectPercentage({text}) {
     return (
         <div>
             <span>
-                How did you like the service?
+                {text}
             </span>
-            <input type="form">
-            </input>
+            <select>
+                <option value='0%'>0%</option>
+                <option value='5%'>5%</option>
+                <option value='10%'>10%</option>
+            </select>
         </div>
     )
 }
