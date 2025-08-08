@@ -1,11 +1,11 @@
-export default function SelectPercentage({text, onChange}) {
+export default function SelectPercentage({children, onChange, onReset}) {
     
     return (
         <div>
             <span>
-                {text}
+                {children}
             </span>
-            <select onChange={onChange}>
+            <select onChange={onChange} onReset={onReset}>
                 <option value='0'>0%</option>
                 <option value='5'>5%</option>
                 <option value='10'>10%</option>

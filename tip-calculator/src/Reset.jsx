@@ -1,6 +1,7 @@
-export default function Reset({HandleBillUpdate}) {
+export default function Reset({onClick}) {
+
     return (
-        <button onClick={() => {HandleBillUpdate}}>
+        <button onClick={onClick}>
             Reset
         </button>
     )

@@ -20,6 +20,12 @@ function App() {
 
   }
 
+  function handleReset() {
+    setBill('');
+    setFriendPercentage('');
+    setPercentage('');
+  }
+
   function handlePercentage(e) {
     setPercentage(Number(e.target.value));
   }
@@ -36,22 +42,25 @@ function App() {
         onChange={handleBillChange}
       />
       <SelectPercentage
-        text='How did you like the service?'
         percentageValue={percentage}
         onChange={handlePercentage}
-      />
+      >
+        How did you like the service?
+      </SelectPercentage>
       <SelectPercentage
-        text='How did your friend like the service?'
         percentageValue={friendPercentage}
         onChange={handleFriendPercentage}
-
-      />
+      >
+        How did your friend like the service?
+      </SelectPercentage>
       <Output
         billValue={bill}
         percentageValue={percentage}
         friendPercentageValue={friendPercentage}
       />
-      <Reset/>
+      <Reset
+        onClick={handleReset}
+      />
     </>
   )
 }
