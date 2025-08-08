@@ -5,7 +5,7 @@ export default function BillInput({text, billValue, onChange}) {
             <span>
                 {text}
             </span>
-            <input type="number" value={billValue} onChange={onChange}>
+            <input type="number" value={billValue} onChange={onChange} placeholder="Bill value...">
                 
             </input>
         </div>
