@@ -11,6 +11,7 @@ function App() {
   const [percentage, setPercentage] = useState(0);
   const [friendPercentage, setFriendPercentage] = useState(0);
 
+  // Function: handles the bill input component values by updating when the user types or resetting if the value is zero
   function handleBillChange(e) {
     if (bill===0) {
       setBill('');
@@ -20,16 +21,19 @@ function App() {
 
   }
 
+  // Function: resets all input components back to default
   function handleReset() {
     setBill('');
     setFriendPercentage('');
     setPercentage('');
   }
 
+  // Function: updates the input component when the user selects their tip
   function handlePercentage(e) {
     setPercentage(Number(e.target.value));
   }
 
+  // Function: updates the input component when the user selects their friend's tip
   function handleFriendPercentage(e) {
     setFriendPercentage(Number(e.target.value));
   }
