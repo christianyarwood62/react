@@ -9,13 +9,23 @@ function App() {
 
   const [bill, setBill] = useState('');
   const [percentage, setPercentage] = useState(0);
+  const [friendPercentage, setFriendPercentage] = useState(0);
 
   function handleBillChange(e) {
-        setBill(Number(e.target.value))
+    if (bill===0) {
+      setBill('');
+    } else {
+      setBill(Number(e.target.value))
+    }
+
   }
 
   function handlePercentage(e) {
-      setPercentage(Number(e.target.value));
+    setPercentage(Number(e.target.value));
+  }
+
+  function handleFriendPercentage(e) {
+    setFriendPercentage(Number(e.target.value));
   }
 
   return (
@@ -30,15 +40,18 @@ function App() {
         percentageValue={percentage}
         onChange={handlePercentage}
       />
+      <SelectPercentage
+        text='How did your friend like the service?'
+        percentageValue={friendPercentage}
+        onChange={handleFriendPercentage}
+
+      />
       <Output
         billValue={bill}
         percentageValue={percentage}
-      >
-      </Output>
-      <Reset
-      >
-        
-      </Reset>
+        friendPercentageValue={friendPercentage}
+      />
+      <Reset/>
     </>
   )
 }
