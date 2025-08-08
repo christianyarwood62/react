@@ -1,9 +1,9 @@
-export default function Output({value}) {
-    if (value!=='') {
+export default function Output({billValue, percentageValue}) {
+    if (billValue!=='') {
         return (
         
             <div>
-                You pay £{value}
+                You pay {(billValue + (billValue * (percentageValue / 100)))} (£{billValue} + {percentageValue}%)
             </div>
         )
     }

@@ -7,24 +7,32 @@ import './App.css'
 
 function App() {
 
-  const [bill, setBill] = useState('')
+  const [bill, setBill] = useState('');
+  const [percentage, setPercentage] = useState(0);
 
   function handleBillChange(e) {
-      setBill(e.target.value)
+      setBill(Number(e.target.value))
+  }
+
+  function handlePercentage(e) {
+      setPercentage(Number(e.target.value));
   }
 
   return (
     <>
       <BillInput 
         text='How much was the bill?'
-        value={bill}
+        billValue={bill}
         onChange={handleBillChange}
       />
       <SelectPercentage
         text='How did you like the service?'
+        percentageValue={percentage}
+        onChange={handlePercentage}
       />
       <Output
-        value={bill}
+        billValue={bill}
+        percentageValue={percentage}
       >
       </Output>
       <Reset
