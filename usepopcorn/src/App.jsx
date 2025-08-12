@@ -72,6 +72,30 @@ export default function App() {
         </Box>
       </Main>
     </>
+
+    // You could also write the tree like so using an element prop
+    // <>
+    // <NavBar>
+    //   <Logo />
+    //   <Search />
+    //   <NumResults movies={movies} />
+    // </NavBar>
+    // <Main>
+    //   <Box>
+    //     element={<MovieList movies={movies} />}
+    //   </Box>
+
+    // <Box
+    //     element={
+    //       <>
+    //             //     <WatchedSummary watched={watched} />
+    //             //     <WatchedMovieList watched={watched} />
+    //       </>
+    //     }
+    // />
+
+    // </Main>
+    // </>
   );
 }
 
@@ -125,6 +149,19 @@ function Box({ children }) {
     </div>
   );
 }
+// Could also write this function using the element props instead of children (can be called anything, not just element)
+// function Box({ element }) {
+//   const [isOpen, setIsOpen] = useState(true);
+
+//   return (
+//     <div className="box">
+//       <button className="btn-toggle" onClick={() => setIsOpen((open) => !open)}>
+//         {isOpen ? "–" : "+"}
+//       </button>
+//       {isOpen && element}
+//     </div>
+//   );
+// }
 
 // function WatchedBox() {
 //   const [watched, setWatched] = useState(tempWatchedData);
