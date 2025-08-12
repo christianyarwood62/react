@@ -14,6 +14,7 @@ export default function StarRating({
   maxRating = 5,
   color = "#fcc419",
   size = 48,
+  className = "",
 }) {
   const [rating, setRating] = useState(0);
   const [tempRating, setTempRating] = useState(0);
@@ -30,7 +31,7 @@ export default function StarRating({
   };
 
   return (
-    <div style={containerStyle}>
+    <div style={containerStyle} className={className}>
       <div style={starContainerStyle}>
         {Array.from({ length: maxRating }, (_, i) => (
           <Star
@@ -53,7 +54,6 @@ function Star({ onRate, full, onHoverIn, onHoverOut, color, size }) {
   const starStyle = {
     width: `${size}px`,
     height: `${size}px`,
-    height: "48px",
     display: "block",
     cursor: "pointer",
   };
