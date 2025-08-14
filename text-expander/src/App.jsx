@@ -37,12 +37,12 @@ export default function App() {
 
 function TextExpander({
   children,
-  collapsedNumWords = 5,
+  collapsedNumWords = 10,
   expandButtonText = "Show more",
   collapseButtonText = "Show less",
   buttonColor = "blue",
   defaultExpanded = true,
-  className,
+  className = "",
 }) {
   const [expanded, setExpanded] = useState(defaultExpanded);
 
@@ -59,7 +59,7 @@ function TextExpander({
   }
 
   return (
-    <div>
+    <div className={className}>
       {expanded ? defaultText : collapsedText}{" "}
       <button
         style={{ color: buttonColor }}
