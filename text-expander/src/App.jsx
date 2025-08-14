@@ -37,7 +37,7 @@ export default function App() {
 
 function TextExpander({
   children,
-  collapsedNumWords,
+  defaultCollapsedNumWords = 5,
   expandButtonText = "Show more",
   collapseButtonText = "Show less",
   buttonColor = "blue",
@@ -45,13 +45,32 @@ function TextExpander({
   className,
 }) {
   const [expanded, setExpanded] = useState(defaultExpanded);
+  const [collapsedNumWords, setCollapsedNumWords] = useState(
+    defaultCollapsedNumWords
+  );
+  const [text, setText] = useState({ children });
+
+  function handleCollapseText(text) {
+    if (expanded === true) {
+      console.log("true");
+      setExpanded(!expanded);
+    } else {
+      console.log("false");
+      setExpanded(!expanded);
+    }
+    // setText(text.children.split(" "));
+    // console.log(text.children.split(" "));
+  }
+  // const text = { children };
+  // text.children = obj.children.split(" ");
 
   return (
     <div>
       {children}{" "}
       <button
         style={{ color: buttonColor }}
-        onClick={() => setExpanded(!expanded)}
+        // onClick={() => setExpanded(!expanded)}
+        onClick={() => handleCollapseText(text)}
       >
         {expanded === true ? collapseButtonText : expandButtonText}
       </button>
