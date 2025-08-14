@@ -48,29 +48,25 @@ function TextExpander({
   const [collapsedNumWords, setCollapsedNumWords] = useState(
     defaultCollapsedNumWords
   );
-  const [text, setText] = useState({ children });
 
-  function handleCollapseText(text) {
+  const defaultText = String(children);
+  const collapsedText = defaultText.split(" ").slice(0, 5).join(" ") + "... ";
+
+  function handleCollapseText() {
     if (expanded === true) {
-      console.log("true");
       setExpanded(!expanded);
     } else {
-      console.log("false");
       setExpanded(!expanded);
     }
-    // setText(text.children.split(" "));
-    // console.log(text.children.split(" "));
   }
-  // const text = { children };
-  // text.children = obj.children.split(" ");
 
   return (
     <div>
-      {children}{" "}
+      {expanded ? defaultText : collapsedText}{" "}
       <button
         style={{ color: buttonColor }}
         // onClick={() => setExpanded(!expanded)}
-        onClick={() => handleCollapseText(text)}
+        onClick={() => handleCollapseText()}
       >
         {expanded === true ? collapseButtonText : expandButtonText}
       </button>
