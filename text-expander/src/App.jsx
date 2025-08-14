@@ -44,29 +44,25 @@ function TextExpander({
   defaultExpanded = true,
   className = "",
 }) {
-  const [expanded, setExpanded] = useState(defaultExpanded);
+  const [isExpanded, setIsExpanded] = useState(defaultExpanded);
 
   const defaultText = String(children);
   const collapsedText =
     defaultText.split(" ").slice(0, collapsedNumWords).join(" ") + "... ";
 
   function handleCollapseText() {
-    if (expanded === true) {
-      setExpanded(!expanded);
-    } else {
-      setExpanded(!expanded);
-    }
+    setIsExpanded(!isExpanded);
   }
 
   return (
     <div className={className}>
-      {expanded ? defaultText : collapsedText}{" "}
+      {isExpanded ? defaultText : collapsedText}{" "}
       <button
         style={{ color: buttonColor }}
         // onClick={() => setExpanded(!expanded)}
         onClick={() => handleCollapseText()}
       >
-        {expanded === true ? collapseButtonText : expandButtonText}
+        {isExpanded ? collapseButtonText : expandButtonText}
       </button>
     </div>
   );
