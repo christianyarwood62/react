@@ -40,7 +40,7 @@ function TextExpander({
   collapsedNumWords,
   expandButtonText = "Show more",
   collapseButtonText = "Show less",
-  buttonColor = "red",
+  buttonColor = "blue",
   defaultExpanded = true,
   className,
 }) {
@@ -49,7 +49,10 @@ function TextExpander({
   return (
     <div>
       {children}{" "}
-      <button onClick={() => setExpanded(!expanded)}>
+      <button
+        style={{ color: buttonColor }}
+        onClick={() => setExpanded(!expanded)}
+      >
         {expanded === true ? collapseButtonText : expandButtonText}
       </button>
     </div>
