@@ -774,4 +774,20 @@ function Error() {
 - element will be kept, including the state
 - new props are passed if they changed between renders
 
-## Diffing rules
+## What is Key prop?
+
+- specialprop that tells diffing algorithm that an element is **unique**
+- allows react to **distinguish** between different instances of same component type
+- when a key stays **same across renders**, element will be kept in DOM (even if position in tree changes)
+  - e.g. using keys in lists
+- when a key **changes between renders**, element will be destroyed and new one created
+  - e.g. using keys to reset state
+
+### Using keys in lists [stable key]
+
+- if there are no keys in each list item, when you add a new one, react thinks all are new and re removes and recreates all of them, **Bad performance**. Using a key would make react know that old list items arent different
+- always use a key for multiple component instances!
+
+### Key prop to reset state [changing key]
+
+- give element a key if you want state to update, remember to change key with the different element
