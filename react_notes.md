@@ -712,3 +712,66 @@ function Error() {
   <Error />
 </Modal>
 ```
+
+# PropTypes
+
+- use PropTypes to make a specific prop a certain type, e.g. a prop has to be text, or a number, etc.
+- usually people now use typescript instead to do this
+
+# How react works behind scenes:
+
+- a render is triggered when state is updated
+- a render makes a new virtual DOM, where that component and all immediate children are re rendered,
+- state is updated, render is triggered (a component tree is made), which makes a new react element tree (all immediate children are re rendered too), then a fiber tree is made during reconciliation + Diffing, which then updates the fiber tree
+
+## Render phase:
+
+1. component instance triggered re render
+2. makes react elements
+3. make a new virtual DOM
+4. reconciliation + diffing
+5. updated fiber tree
+6. list of DOM updates
+
+### reconciliation - updates only a small part of the DOM (Because doing everything would be slow)
+
+- reconciler: fiber
+  - builds a fiber tree based on initial render
+  - an internal tree that has a fiber for each component instance and DOM element
+  - fibers are not re created on every render
+  - fiber tree have a different lay out to the react element tree, not parent and child relationship
+  - work can be done asynchronously
+
+## Commit phase
+
+- where react writes to DOM, inserts, deletions, and updates
+- committing is synchronous, so cant show partial results in UI
+- performed by ReactDOM, react never actually touches the DOM, react only does render phase, not commit phase
+- can use different "renderers" for different apps, e.g. React Native for IOS, remotion for youtube, ReactDom for browsers, many more. Terrible name because they actually commit the result of the render phase
+
+1. updated DOM
+
+## Browser Paint phase
+
+1)updated UI on the screen
+
+## How Diffing works
+
+- use 2 assumptions
+
+1. 2 elements of different types will produce different trees
+2. elements with stable key prop stay same across renders
+
+2 situations we're interested in:
+
+1. Same position, different element, i.e. a div to a header
+
+- react assumes entire sub tree is no longer valid
+- state is reset (tree might be rebuilt if children stayed the same)
+
+2. Same position, same element, i.e. className changes, or a prop changes
+
+- element will be kept, including the state
+- new props are passed if they changed between renders
+
+## Diffing rules
