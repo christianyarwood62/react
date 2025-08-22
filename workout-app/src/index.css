@@ -1,0 +1,10 @@
+.container {
+  background: gray;
+  height: fit-content;
+  width: fit-content;
+  padding: 10px;
+}
+
+.exercise {
+  display: flex;
+}
