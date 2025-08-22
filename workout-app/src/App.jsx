@@ -31,13 +31,24 @@ const exercises = [
 ];
 
 function App() {
-  // const [exercise]
+  const [isExerciseDetailsOpen, setIsExerciseDetailsOpen] = useState(false);
+
+  function handleShowExerciseDetails() {
+    setIsExerciseDetailsOpen(!isExerciseDetailsOpen);
+    console.log("hi");
+  }
 
   return (
     <div className="app">
       <div className="exercise-details">
-        <WorkoutList className="workout-list" />
-        <ExerciseDetails className="exercise-details" />
+        <WorkoutList
+          className="workout-list"
+          handleShowExerciseDetails={handleShowExerciseDetails}
+        />
+        <ExerciseDetails
+          className="exercise-details"
+          isExerciseDetailsOpen={isExerciseDetailsOpen}
+        />
       </div>
       <RoutineList className="routine-list" />
     </div>
@@ -46,29 +57,29 @@ function App() {
 
 export default App;
 
-function WorkoutList() {
+function WorkoutList({ handleShowExerciseDetails }) {
   return (
     <div className="container">
       {exercises.map((exercise) => (
-        <Exercise>{exercise.name}</Exercise>
+        <Exercise handleShowExerciseDetails={handleShowExerciseDetails}>
+          {exercise.name}
+        </Exercise>
       ))}
     </div>
   );
 }
 
-function Exercise({ children }) {
+function Exercise({ children, handleShowExerciseDetails }) {
   return (
     <div className="exercise">
       <p>{children}</p>
-      <button onClick={() => console.log("test")}>Show details</button>
+      <button onClick={() => handleShowExerciseDetails()}>Show details</button>
       <button>Add to Workout</button>
     </div>
   );
 }
 
-function ExerciseDetails() {
-  const [isExerciseDetailsOpen, setIsExerciseDetailsOpen] = useState(false);
-
+function ExerciseDetails({ isExerciseDetailsOpen }) {
   return (
     <div>
       {isExerciseDetailsOpen && (
