@@ -1,5 +1,35 @@
 import { useState } from "react";
 
+const exercises = [
+  {
+    name: "Bench Press",
+    instructions: {
+      1: "Lie flat on the bench holding the barbell shoulder width",
+      2: "Retract scapula and have elbows at 45 degree angle",
+      3: "Breath in and lower bar to middle of chest",
+      4: "Repeat for reps",
+    },
+  },
+  {
+    name: "Chest fly",
+    instructions: {
+      1: "Sit with pad against back and grip the handles",
+      2: "Slightly elbows with and squeeze chest to bring handles in front of chest",
+      3: "Return to starting position while inhaling",
+      4: "Repeat for reps",
+    },
+  },
+  {
+    name: "Chest Dip",
+    instructions: {
+      1: "Hold body from arms extended above dip bars",
+      2: "Slowly lower body with torso leaning forward  and elbows slightly flared",
+      3: "From this position, squeeze chest and bring body back to starting position",
+      4: "Repeat for reps",
+    },
+  },
+];
+
 function App() {
   return <WorkoutList />;
 }
@@ -8,10 +38,17 @@ export default App;
 
 function WorkoutList() {
   return (
-    <div className="container">
-      <Exercise>Exercise 1</Exercise>
-      <Exercise>Exercise 2</Exercise>
-      <Exercise>Exercise 3</Exercise>
+    <div className="app">
+      <div className="exercise-details">
+        <div className="container">
+          {exercises.map((exercise) => (
+            <Exercise>{exercise.name}</Exercise>
+          ))}
+        </div>
+        <ExerciseDetails />
+      </div>
+
+      <RoutineList />
     </div>
   );
 }
@@ -24,4 +61,11 @@ function Exercise({ children }) {
       <button>Add to Workout</button>
     </div>
   );
+}
+
+function ExerciseDetails() {
+  return <div className="container">This exercise is done by xx</div>;
+}
+function RoutineList() {
+  return <div className="container">This is the exercise routine planned</div>;
 }
