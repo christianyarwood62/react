@@ -31,24 +31,27 @@ const exercises = [
 ];
 
 function App() {
-  return <WorkoutList />;
+  // const [exercise]
+
+  return (
+    <div className="app">
+      <div className="exercise-details">
+        <WorkoutList className="workout-list" />
+        <ExerciseDetails className="exercise-details" />
+      </div>
+      <RoutineList className="routine-list" />
+    </div>
+  );
 }
 
 export default App;
 
 function WorkoutList() {
   return (
-    <div className="app">
-      <div className="exercise-details">
-        <div className="container">
-          {exercises.map((exercise) => (
-            <Exercise>{exercise.name}</Exercise>
-          ))}
-        </div>
-        <ExerciseDetails />
-      </div>
-
-      <RoutineList />
+    <div className="container">
+      {exercises.map((exercise) => (
+        <Exercise>{exercise.name}</Exercise>
+      ))}
     </div>
   );
 }
@@ -57,14 +60,24 @@ function Exercise({ children }) {
   return (
     <div className="exercise">
       <p>{children}</p>
-      <button>Show details</button>
+      <button onClick={() => console.log("test")}>Show details</button>
       <button>Add to Workout</button>
     </div>
   );
 }
 
 function ExerciseDetails() {
-  return <div className="container">This exercise is done by xx</div>;
+  const [isExerciseDetailsOpen, setIsExerciseDetailsOpen] = useState(false);
+
+  return (
+    <div>
+      {isExerciseDetailsOpen && (
+        <div className="container">
+          Exercise xx <button>Open</button>
+        </div>
+      )}
+    </div>
+  );
 }
 function RoutineList() {
   return <div className="container">This is the exercise routine planned</div>;

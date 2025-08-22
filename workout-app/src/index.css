@@ -1,8 +1,9 @@
 .container {
-  background: gray;
+  background: lightgray;
   height: fit-content;
   width: fit-content;
   padding: 10px;
+  border-radius: 30px;
 }
 
 .exercise-details {
@@ -13,4 +14,9 @@
 
 .exercise {
   display: flex;
+}
+
+button {
+  height: fit-content;
+  width: 70px;
 }
