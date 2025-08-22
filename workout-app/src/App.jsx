@@ -35,15 +35,11 @@ const initialExercises = [
 
 function App() {
   const [exercises, setExercises] = useState(initialExercises);
-  const [isExerciseDetailsOpen, setIsExerciseDetailsOpen] = useState(true);
   const [selectedExercise, setSelectedExercise] = useState(null);
 
-  function handleShowExerciseDetails() {
-    setIsExerciseDetailsOpen(!isExerciseDetailsOpen);
-  }
-
   function handleSelection(exercise) {
-    setSelectedExercise(exercise);
+    //
+    setSelectedExercise((cur) => (cur?.id === exercise.id ? null : exercise));
   }
 
   return (
@@ -52,13 +48,12 @@ function App() {
         <WorkoutList
           exercises={exercises}
           className="workout-list"
-          handleShowExerciseDetails={handleShowExerciseDetails}
           onSelection={handleSelection}
+          selectedExercise={selectedExercise}
         />
         {selectedExercise && (
           <ExerciseDetails
             className="exercise-details"
-            isExerciseDetailsOpen={isExerciseDetailsOpen}
             selectedExercise={selectedExercise}
           />
         )}
@@ -70,15 +65,15 @@ function App() {
 
 export default App;
 
-function WorkoutList({ exercises, handleShowExerciseDetails, onSelection }) {
+function WorkoutList({ exercises, onSelection, selectedExercise }) {
   return (
     <div className="container">
       {exercises.map((exercise) => (
         <Exercise
           exercise={exercise}
           key={exercise.id}
-          handleShowExerciseDetails={handleShowExerciseDetails}
           onSelection={onSelection}
+          selectedExercise={selectedExercise}
         >
           {exercise.name}
         </Exercise>
@@ -87,29 +82,26 @@ function WorkoutList({ exercises, handleShowExerciseDetails, onSelection }) {
   );
 }
 
-function Exercise({
-  exercise,
-  children,
-  handleShowExerciseDetails,
-  onSelection,
-}) {
+function Exercise({ exercise, children, onSelection, selectedExercise }) {
+  const isSelected = selectedExercise?.id === exercise.id;
+
   return (
     <div className="exercise">
       <p>{children}</p>
-      <button onClick={() => onSelection(exercise)}>Show details</button>
+      <button onClick={() => onSelection(exercise)}>
+        {isSelected ? "Hide details" : "Show details"}
+      </button>
       <button>Add to Workout</button>
     </div>
   );
 }
 
-function ExerciseDetails({ isExerciseDetailsOpen, selectedExercise }) {
+function ExerciseDetails({ selectedExercise }) {
   return (
     <div>
-      {isExerciseDetailsOpen && (
-        <div className="container">
-          Exercise {selectedExercise.name} <button>Close</button>
-        </div>
-      )}
+      <div className="container">
+        Exercise {selectedExercise.name} <button>Close</button>
+      </div>
     </div>
   );
 }
