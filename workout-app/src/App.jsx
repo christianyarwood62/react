@@ -55,6 +55,7 @@ function App() {
           <ExerciseDetails
             className="exercise-details"
             selectedExercise={selectedExercise}
+            onSelection={handleSelection}
           />
         )}
       </div>
@@ -96,11 +97,12 @@ function Exercise({ exercise, children, onSelection, selectedExercise }) {
   );
 }
 
-function ExerciseDetails({ selectedExercise }) {
+function ExerciseDetails({ selectedExercise, onSelection }) {
   return (
     <div>
       <div className="container">
-        Exercise {selectedExercise.name} <button>Close</button>
+        Exercise {selectedExercise.name}{" "}
+        <button onClick={() => onSelection(selectedExercise)}>Close</button>
       </div>
     </div>
   );
