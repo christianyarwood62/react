@@ -33,13 +33,25 @@ const initialExercises = [
   },
 ];
 
+const initialExerciseRoutine = [];
+
 function App() {
   const [exercises, setExercises] = useState(initialExercises);
   const [selectedExercise, setSelectedExercise] = useState(null);
+  const [exerciseRoutine, setExerciseRoutine] = useState(
+    initialExerciseRoutine
+  );
+  const [chosenExerciseForRoutine, setChosenExerciseForRoutine] =
+    useState(null);
 
   function handleSelection(exercise) {
     //
     setSelectedExercise((cur) => (cur?.id === exercise.id ? null : exercise));
+  }
+
+  function handleAddExerciseToRoutine(exercise) {
+    setChosenExerciseForRoutine(exercise);
+    setExerciseRoutine((exerciseRoutine) => [...exerciseRoutine, exercise]);
   }
 
   return (
@@ -50,6 +62,7 @@ function App() {
           className="workout-list"
           onSelection={handleSelection}
           selectedExercise={selectedExercise}
+          onAddToWorkout={handleAddExerciseToRoutine}
         />
         {selectedExercise && (
           <ExerciseDetails
@@ -59,22 +72,33 @@ function App() {
           />
         )}
       </div>
-      <RoutineList className="routine-list" />
+      <RoutineList
+        className="routine-list"
+        exerciseRoutine={exerciseRoutine}
+        chosenExerciseForRoutine={chosenExerciseForRoutine}
+      />
     </div>
   );
 }
 
 export default App;
 
-function WorkoutList({ exercises, onSelection, selectedExercise }) {
+function WorkoutList({
+  exercises,
+  onSelection,
+  selectedExercise,
+  onAddToWorkout,
+}) {
   return (
     <div className="container">
+      <h1>Exercise list</h1>
       {exercises.map((exercise) => (
         <Exercise
           exercise={exercise}
           key={exercise.id}
           onSelection={onSelection}
           selectedExercise={selectedExercise}
+          onAddToWorkout={onAddToWorkout}
         >
           {exercise.name}
         </Exercise>
@@ -83,20 +107,22 @@ function WorkoutList({ exercises, onSelection, selectedExercise }) {
   );
 }
 
-function Exercise({ exercise, children, onSelection, selectedExercise }) {
+function Exercise({
+  exercise,
+  children,
+  onSelection,
+  selectedExercise,
+  onAddToWorkout,
+}) {
   const isSelected = selectedExercise?.id === exercise.id;
 
   return (
     <div className="exercise">
       <p>{children}</p>
-      <button
-        onClick={() =>
-          onSelection(exercise) & console.log({ selectedExercise })
-        }
-      >
+      <button onClick={() => onSelection(exercise)}>
         {isSelected ? "Hide details" : "Show details"}
       </button>
-      <button>Add to Workout</button>
+      <button onClick={() => onAddToWorkout(exercise)}>Add to Workout</button>
     </div>
   );
 }
@@ -105,10 +131,10 @@ function ExerciseDetails({ selectedExercise, onSelection }) {
   return (
     <div>
       <div className="container">
-        Exercise {selectedExercise.name}
+        <h2>{selectedExercise.name}</h2>
         <button onClick={() => onSelection(selectedExercise)}>Close</button>
         {selectedExercise.instructions.map((instruction, step) => (
-          <div>
+          <div key={step + 1}>
             Step {step + 1}: {instruction}
           </div>
         ))}
@@ -116,6 +142,25 @@ function ExerciseDetails({ selectedExercise, onSelection }) {
     </div>
   );
 }
-function RoutineList() {
-  return <div className="container">This is the exercise routine planned</div>;
+function RoutineList({ exerciseRoutine, chosenExerciseForRoutine }) {
+  return (
+    <div>
+      <div className="container">
+        {chosenExerciseForRoutine ? (
+          <h2>This is your planned routine:</h2>
+        ) : (
+          <h2>Add your first exercise!</h2>
+        )}
+        {chosenExerciseForRoutine &&
+          exerciseRoutine.map((exercise) => <div>{exercise.name}</div>)}
+
+        {/* {chosenExerciseForRoutine
+          ? `This is the exercise routine planned:` + <div>hi</div>
+          : "Add your first exercise to the routine!"} */}
+        {/* {exerciseRoutine.map((exercise) => (
+          <div>{exercise.name}</div>
+        ))} */}
+      </div>
+    </div>
+  );
 }
