@@ -64,6 +64,7 @@ function App() {
           selectedExercise={selectedExercise}
           onAddToWorkout={handleAddExerciseToRoutine}
         />
+        <AddExerciseForm />
         {selectedExercise && (
           <ExerciseDetails
             className="exercise-details"
@@ -132,7 +133,7 @@ function ExerciseDetails({ selectedExercise, onSelection }) {
     <div>
       <div className="container">
         <h2>{selectedExercise.name}</h2>
-        <button onClick={() => onSelection(selectedExercise)}>Close</button>
+        <button onClick={() => onSelection(selectedExercise)}>X</button>
         {selectedExercise.instructions.map((instruction, step) => (
           <div key={step + 1}>
             Step {step + 1}: {instruction}
@@ -140,6 +141,22 @@ function ExerciseDetails({ selectedExercise, onSelection }) {
         ))}
       </div>
     </div>
+  );
+}
+
+function AddExerciseForm() {
+  return (
+    <form className="container">
+      <h2>Input metrics:</h2>
+      <label>Weight:</label>
+      <input></input>
+
+      <label>Sets:</label>
+      <input></input>
+
+      <label>Reps:</label>
+      <input></input>
+    </form>
   );
 }
 function RoutineList({ exerciseRoutine, chosenExerciseForRoutine }) {
@@ -153,13 +170,6 @@ function RoutineList({ exerciseRoutine, chosenExerciseForRoutine }) {
         )}
         {chosenExerciseForRoutine &&
           exerciseRoutine.map((exercise) => <div>{exercise.name}</div>)}
-
-        {/* {chosenExerciseForRoutine
-          ? `This is the exercise routine planned:` + <div>hi</div>
-          : "Add your first exercise to the routine!"} */}
-        {/* {exerciseRoutine.map((exercise) => (
-          <div>{exercise.name}</div>
-        ))} */}
       </div>
     </div>
   );
