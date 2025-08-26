@@ -136,14 +136,14 @@ function App() {
               onSelection={handleSelection}
             />
           )}
-          <RoutineList
-            className="routine-list"
-            exerciseRoutine={exerciseRoutine}
-            chosenExerciseForRoutine={chosenExerciseForRoutine}
-          />
         </div>
       )}
-      {tab === tab2 && <AddExerciseForm />}
+      {tab === tab2 && (
+        <WorkoutTab
+          exerciseRoutine={exerciseRoutine}
+          chosenExerciseForRoutine={chosenExerciseForRoutine}
+        />
+      )}
       {tab === tab3 && <ExerciseHistoryTab />}
     </div>
   );
@@ -213,6 +213,39 @@ function ExerciseDetails({ selectedExercise, onSelection }) {
   );
 }
 
+function WorkoutTab({ exerciseRoutine, chosenExerciseForRoutine }) {
+  return (
+    <div>
+      <TemplateList />
+      <RoutineList
+        className="routine-list"
+        exerciseRoutine={exerciseRoutine}
+        chosenExerciseForRoutine={chosenExerciseForRoutine}
+      />
+      <AddExerciseForm />
+    </div>
+  );
+}
+
+function TemplateList() {
+  return (
+    <div className="container">
+      <h2>Templates</h2>
+      <TemplateWorkout />
+    </div>
+  );
+}
+
+function TemplateWorkout() {
+  return (
+    <div className="container">
+      <button>Create Template</button>
+      <h3>Template xxx</h3>
+      <p>Bench Press</p>
+      <p>Shoulder press</p>
+    </div>
+  );
+}
 function AddExerciseForm() {
   const [weightForm, setWeightForm] = useState("");
 
