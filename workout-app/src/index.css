@@ -6,7 +6,7 @@
   border-radius: 30px;
 }
 
-.exercise-details {
+.exercise-details-tab {
   display: flex;
   margin-bottom: 100px;
   gap: 50px;
