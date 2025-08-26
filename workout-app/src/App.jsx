@@ -221,9 +221,16 @@ function WorkoutTab({
   const [showCreateWorkoutTemplate, setShowCreateWorkoutTemplate] =
     useState(false);
 
+  function handleShowCreateWorkoutTemplate() {
+    setShowCreateWorkoutTemplate(!showCreateWorkoutTemplate);
+  }
+
   return (
     <div>
-      <TemplateList onAddToWorkout={onAddToWorkout} />
+      <TemplateList
+        onShowCreateWorkoutTemplate={handleShowCreateWorkoutTemplate}
+        onAddToWorkout={onAddToWorkout}
+      />
       {showCreateWorkoutTemplate && <CreateWorkoutTemplateForm />}
       <RoutineList
         className="routine-list"
@@ -235,19 +242,24 @@ function WorkoutTab({
   );
 }
 
-function TemplateList({ onAddToWorkout }) {
+function TemplateList({ onAddToWorkout, onShowCreateWorkoutTemplate }) {
   return (
     <div className="container">
       <h2>Templates</h2>
-      <TemplateWorkout onAddToWorkout={onAddToWorkout} />
+      <TemplateWorkout
+        onShowCreateWorkoutTemplate={onShowCreateWorkoutTemplate}
+        onAddToWorkout={onAddToWorkout}
+      />
     </div>
   );
 }
 
-function TemplateWorkout({ onAddToWorkout }) {
+function TemplateWorkout({ onAddToWorkout, onShowCreateWorkoutTemplate }) {
   return (
     <div className="container">
-      <button>Create Template</button>
+      <button onClick={() => onShowCreateWorkoutTemplate()}>
+        Create Template
+      </button>
       <h3>Template xxx</h3>
       <p>Bench Press</p>
       <button onClick={() => onAddToWorkout("bench press")}>
