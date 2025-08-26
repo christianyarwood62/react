@@ -142,6 +142,7 @@ function App() {
         <WorkoutTab
           exerciseRoutine={exerciseRoutine}
           chosenExerciseForRoutine={chosenExerciseForRoutine}
+          onAddToWorkout={handleAddExerciseToRoutine}
         />
       )}
       {tab === tab3 && <ExerciseHistoryTab />}
@@ -190,7 +191,6 @@ function Exercise({
       <button onClick={() => onSelection(exercise)}>
         {isSelected ? "Hide details" : "Show details"}
       </button>
-      <button onClick={() => onAddToWorkout(exercise)}>Add to Workout</button>
     </div>
   );
 }
@@ -213,10 +213,14 @@ function ExerciseDetails({ selectedExercise, onSelection }) {
   );
 }
 
-function WorkoutTab({ exerciseRoutine, chosenExerciseForRoutine }) {
+function WorkoutTab({
+  exerciseRoutine,
+  chosenExerciseForRoutine,
+  onAddToWorkout,
+}) {
   return (
     <div>
-      <TemplateList />
+      <TemplateList onAddToWorkout={onAddToWorkout} />
       <RoutineList
         className="routine-list"
         exerciseRoutine={exerciseRoutine}
@@ -227,22 +231,28 @@ function WorkoutTab({ exerciseRoutine, chosenExerciseForRoutine }) {
   );
 }
 
-function TemplateList() {
+function TemplateList({ onAddToWorkout }) {
   return (
     <div className="container">
       <h2>Templates</h2>
-      <TemplateWorkout />
+      <TemplateWorkout onAddToWorkout={onAddToWorkout} />
     </div>
   );
 }
 
-function TemplateWorkout() {
+function TemplateWorkout({ onAddToWorkout }) {
   return (
     <div className="container">
       <button>Create Template</button>
       <h3>Template xxx</h3>
       <p>Bench Press</p>
+      <button onClick={() => onAddToWorkout("bench press")}>
+        Add to Workout
+      </button>
       <p>Shoulder press</p>
+      <button onClick={() => onAddToWorkout("Shoulder press")}>
+        Add to Workout
+      </button>
     </div>
   );
 }
@@ -287,7 +297,7 @@ function RoutineList({ exerciseRoutine, chosenExerciseForRoutine }) {
           <h2>Add your first exercise!</h2>
         )}
         {chosenExerciseForRoutine &&
-          exerciseRoutine.map((exercise) => <div>{exercise.name}</div>)}
+          exerciseRoutine.map((exercise) => <div>{exercise}</div>)}
       </div>
     </div>
   );
