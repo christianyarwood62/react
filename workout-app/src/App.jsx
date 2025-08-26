@@ -218,9 +218,13 @@ function WorkoutTab({
   chosenExerciseForRoutine,
   onAddToWorkout,
 }) {
+  const [showCreateWorkoutTemplate, setShowCreateWorkoutTemplate] =
+    useState(false);
+
   return (
     <div>
       <TemplateList onAddToWorkout={onAddToWorkout} />
+      {showCreateWorkoutTemplate && <CreateWorkoutTemplateForm />}
       <RoutineList
         className="routine-list"
         exerciseRoutine={exerciseRoutine}
@@ -253,6 +257,29 @@ function TemplateWorkout({ onAddToWorkout }) {
       <button onClick={() => onAddToWorkout("Shoulder press")}>
         Add to Workout
       </button>
+    </div>
+  );
+}
+
+function CreateWorkoutTemplateForm() {
+  return (
+    <div className="container">
+      <div>
+        <button>x</button>
+        <h2>Create a template:</h2>
+        <form>
+          <label for="template-name"></label>
+          <input
+            type="text"
+            name="template-name"
+            placeholder="Enter name of template"
+          />
+
+          <select>
+            <option placeholder="tes§a">test</option>
+          </select>
+        </form>
+      </div>
     </div>
   );
 }
@@ -292,9 +319,11 @@ function RoutineList({ exerciseRoutine, chosenExerciseForRoutine }) {
     <div>
       <div className="container">
         {chosenExerciseForRoutine ? (
-          <h2>This is your planned routine:</h2>
+          <input defaultValue={"Enter Template Name"}></input>
         ) : (
-          <h2>Add your first exercise!</h2>
+          <div>
+            <h2>Add your first exercise!</h2>
+          </div>
         )}
         {chosenExerciseForRoutine &&
           exerciseRoutine.map((exercise) => <div>{exercise}</div>)}
