@@ -224,6 +224,17 @@ function WorkoutTab({
 }) {
   const [showCreateWorkoutTemplate, setShowCreateWorkoutTemplate] =
     useState(false);
+  const [chosenExercisesList, setChosenExerciseList] = useState([]);
+  const [chosenExercise, setChosenExercise] = useState([]);
+
+  function handleChosenExercise(exercise) {
+    setChosenExercise(exercise.target.value);
+  }
+
+  function handleAddExerciseToTemplate(e) {
+    e.preventDefault();
+    setChosenExerciseList(() => [...chosenExercisesList, chosenExercise]);
+  }
 
   function handleShowCreateWorkoutTemplate() {
     setShowCreateWorkoutTemplate(!showCreateWorkoutTemplate);
@@ -236,8 +247,16 @@ function WorkoutTab({
         onAddToWorkout={onAddToWorkout}
       />
       {showCreateWorkoutTemplate && (
-        <CreateWorkoutTemplateForm exercises={exercises} />
+        <CreateWorkoutTemplateForm
+          exercises={exercises}
+          chosenExercisesList={chosenExercisesList}
+          onAddChosenExercisesList={handleAddExerciseToTemplate}
+          chosenExercise={chosenExercise}
+          onHandleChosenExercise={handleChosenExercise}
+        />
       )}
+      <ExerciseTemplate chosenExercisesList={chosenExercisesList} />
+      <WorkoutTemplateList />
       <RoutineList
         className="routine-list"
         exerciseRoutine={exerciseRoutine}
@@ -278,7 +297,12 @@ function TemplateWorkout({ onAddToWorkout, onShowCreateWorkoutTemplate }) {
   );
 }
 
-function CreateWorkoutTemplateForm({ exercises }) {
+function CreateWorkoutTemplateForm({
+  exercises,
+  onAddChosenExercisesList,
+  chosenExercise,
+  onHandleChosenExercise,
+}) {
   const [exercisesInSelectBox, setExercisesInSelectBox] = useState(
     initialExercisesInTemplate
   );
@@ -297,13 +321,6 @@ function CreateWorkoutTemplateForm({ exercises }) {
         <button>x</button>
         <h2>Create a template:</h2>
         <form>
-          <label htmlFor="template-name"></label>
-          <input
-            type="text"
-            name="template-name"
-            placeholder="Enter name of template"
-          />
-
           <button onClick={(e) => handleShowAddExerciseSelectBoxes(e)}>
             Add an exercise
           </button>
@@ -311,6 +328,9 @@ function CreateWorkoutTemplateForm({ exercises }) {
             <AddExercisetoTemplateInput
               exercises={exercises}
               key={`temp-${exercise}-exercise`}
+              chosenExercise={chosenExercise}
+              onAddChosenExercisesList={onAddChosenExercisesList}
+              onHandleChosenExercise={onHandleChosenExercise}
             />
           ))}
         </form>
@@ -319,39 +339,65 @@ function CreateWorkoutTemplateForm({ exercises }) {
   );
 }
 
-function AddExercisetoTemplateInput({ exercises }) {
+function AddExercisetoTemplateInput({
+  exercises,
+  onAddChosenExercisesList,
+  chosenExercise,
+  onHandleChosenExercise,
+}) {
   const [exerciseIsSelected, setExerciseIsSelected] = useState(false);
-  const [chosenExercise, setChosenExercise] = useState(null);
 
-  function handleChosenExercise(exercise) {
-    setChosenExercise(exercise);
-  }
-
-  function handleAddExerciseToTemplate(e) {
-    e.preventDefault();
-    setExerciseIsSelected(true);
-  }
   return (
     <div>
       {exerciseIsSelected ? (
-        <div>{chosenExercise}</div>
+        ""
       ) : (
         <div>
-          <select onChange={(e) => handleChosenExercise(e.target.value)}>
+          <select onChange={(e) => onHandleChosenExercise(e)}>
             <option>Choose an exercise</option>
             {exercises.map((exercise) => (
-              <option key={exercise.name}>{exercise.name}</option>
+              <option>{exercise.name}</option>
             ))}
           </select>
-          <button onClick={(e) => handleAddExerciseToTemplate(e)}>Add</button>
+          <button
+            onClick={(e) => onAddChosenExercisesList(e, { chosenExercise })}
+          >
+            Add
+          </button>
         </div>
       )}
     </div>
   );
 }
 
-function ExerciseTemplate() {
-  return <div>test</div>;
+function ExerciseTemplate({ chosenExercisesList }) {
+  const [proposedWorkoutTemplate, setProposedWorkoutTemplate] = useState(null);
+
+  function handleAddProposedWorkoutTemplate(e) {
+    e.preventDefault();
+    setProposedWorkoutTemplate();
+  }
+
+  return (
+    <div className="container">
+      <h2>This is a provisional workout template:</h2>
+      <form onSubmit={handleAddProposedWorkoutTemplate}>
+        <input placeholder="Enter Template Name" />
+        {chosenExercisesList?.map((exercise) => (
+          <div>{exercise}</div>
+        ))}
+        <button>Save Template</button>
+      </form>
+    </div>
+  );
+}
+
+function WorkoutTemplateList() {
+  return (
+    <div className="container">
+      <h2>This is your template list</h2>
+    </div>
+  );
 }
 
 // function AddExerciseTemplateForm() {
