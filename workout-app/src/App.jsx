@@ -145,6 +145,7 @@ function App() {
           exerciseRoutine={exerciseRoutine}
           chosenExerciseForRoutine={chosenExerciseForRoutine}
           onAddToWorkout={handleAddExerciseToRoutine}
+          exercises={exercises}
         />
       )}
       {tab === tab3 && <ExerciseHistoryTab />}
@@ -219,6 +220,7 @@ function WorkoutTab({
   exerciseRoutine,
   chosenExerciseForRoutine,
   onAddToWorkout,
+  exercises,
 }) {
   const [showCreateWorkoutTemplate, setShowCreateWorkoutTemplate] =
     useState(false);
@@ -233,7 +235,9 @@ function WorkoutTab({
         onShowCreateWorkoutTemplate={handleShowCreateWorkoutTemplate}
         onAddToWorkout={onAddToWorkout}
       />
-      {showCreateWorkoutTemplate && <CreateWorkoutTemplateForm />}
+      {showCreateWorkoutTemplate && (
+        <CreateWorkoutTemplateForm exercises={exercises} />
+      )}
       <RoutineList
         className="routine-list"
         exerciseRoutine={exerciseRoutine}
@@ -274,7 +278,7 @@ function TemplateWorkout({ onAddToWorkout, onShowCreateWorkoutTemplate }) {
   );
 }
 
-function CreateWorkoutTemplateForm() {
+function CreateWorkoutTemplateForm({ exercises }) {
   const [exercisesInTemplate, setExercisesInTemplate] = useState(
     initialExercisesInTemplate
   );
@@ -303,8 +307,11 @@ function CreateWorkoutTemplateForm() {
           <button onClick={(e) => handleShowAddExerciseSelectBoxes(e)}>
             Add an exercise
           </button>
-          {exercisesInTemplate.map((exerciseSelectBox, exercise) => (
-            <AddExercisetoTemplateInput key={`temp-${exercise}-exercise`} />
+          {exercisesInTemplate.map((i, exercise) => (
+            <AddExercisetoTemplateInput
+              exercises={exercises}
+              key={`temp-${exercise}-exercise`}
+            />
           ))}
         </form>
       </div>
@@ -312,11 +319,14 @@ function CreateWorkoutTemplateForm() {
   );
 }
 
-function AddExercisetoTemplateInput() {
+function AddExercisetoTemplateInput({ exercises }) {
   return (
     <div>
       <select>
         <option>Choose an exercise</option>
+        {exercises.map((exercise) => (
+          <option>{exercise.name}</option>
+        ))}
       </select>
     </div>
   );
