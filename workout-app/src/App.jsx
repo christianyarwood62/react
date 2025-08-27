@@ -81,6 +81,8 @@ const initialExercises = [
   },
 ];
 
+const initialExercisesInTemplate = [];
+
 // const workoutHistory = [{ test }];
 
 const initialExerciseRoutine = [];
@@ -237,7 +239,6 @@ function WorkoutTab({
         exerciseRoutine={exerciseRoutine}
         chosenExerciseForRoutine={chosenExerciseForRoutine}
       />
-      <AddExerciseForm />
     </div>
   );
 }
@@ -274,57 +275,83 @@ function TemplateWorkout({ onAddToWorkout, onShowCreateWorkoutTemplate }) {
 }
 
 function CreateWorkoutTemplateForm() {
+  const [exercisesInTemplate, setExercisesInTemplate] = useState(
+    initialExercisesInTemplate
+  );
+
+  function handleShowAddExerciseSelectBoxes(e, exercise) {
+    e.preventDefault();
+    setExercisesInTemplate((exercisesInTemplate) => [
+      ...exercisesInTemplate,
+      exercise,
+    ]);
+  }
+
   return (
     <div className="container">
       <div>
         <button>x</button>
         <h2>Create a template:</h2>
         <form>
-          <label for="template-name"></label>
+          <label htmlFor="template-name"></label>
           <input
             type="text"
             name="template-name"
             placeholder="Enter name of template"
           />
 
-          <select>
-            <option placeholder="tes§a">test</option>
-          </select>
+          <button onClick={(e) => handleShowAddExerciseSelectBoxes(e)}>
+            Add an exercise
+          </button>
+          {exercisesInTemplate.map((exerciseSelectBox, exercise) => (
+            <AddExercisetoTemplateInput key={`temp-${exercise}-exercise`} />
+          ))}
         </form>
       </div>
     </div>
   );
 }
-function AddExerciseForm() {
-  const [weightForm, setWeightForm] = useState("");
 
-  function handleSubmit(e) {
-    e.preventDefault();
-  }
-
+function AddExercisetoTemplateInput() {
   return (
-    <form onSubmit={handleSubmit} className="container">
-      <h2>Input metrics:</h2>
-
-      <div>
-        <label>Weight:</label>
-        <input onChange={(e) => setWeightForm(e.target.value)}></input> kg
-      </div>
-
-      <div>
-        <label>Sets:</label>
-        <input></input>
-      </div>
-
-      <div>
-        <label>Reps:</label>
-        <input></input>
-      </div>
-
-      <button>Add to routine</button>
-    </form>
+    <div>
+      <select>
+        <option>Choose an exercise</option>
+      </select>
+    </div>
   );
 }
+
+// function AddExerciseTemplateForm() {
+//   const [weightForm, setWeightForm] = useState("");
+
+//   function handleSubmit(e) {
+//     e.preventDefault();
+//   }
+
+//   return (
+//     <form onSubmit={handleSubmit} className="container">
+//       <h2>Input metrics:</h2>
+
+//       <div>
+//         <label>Weight:</label>
+//         <input onChange={(e) => setWeightForm(e.target.value)}></input> kg
+//       </div>
+
+//       <div>
+//         <label>Sets:</label>
+//         <input></input>
+//       </div>
+
+//       <div>
+//         <label>Reps:</label>
+//         <input></input>
+//       </div>
+
+//       <button>Add to routine</button>
+//     </form>
+//   );
+// }
 
 function RoutineList({ exerciseRoutine, chosenExerciseForRoutine }) {
   return (
