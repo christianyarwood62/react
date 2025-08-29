@@ -249,6 +249,7 @@ function WorkoutTab({ exercises, templateList, onSetTemplateList }) {
           chosenExercise={chosenExercise}
           onHandleChosenExercise={handleChosenExercise}
           onSetIsAddExerciseInputOpen={setIsExerciseTemplateListOpen}
+          onSetChosenExerciseList={setChosenExerciseList}
         />
       )}
       {isExerciseTemplateListOpen && (
@@ -282,6 +283,7 @@ function CreateWorkoutTemplateForm({
   chosenExercise,
   onHandleChosenExercise,
   onSetIsAddExerciseInputOpen,
+  onSetChosenExerciseList,
 }) {
   const [exercisesInSelectBox, setExercisesInSelectBox] = useState(
     initialExercisesInTemplate
@@ -317,6 +319,7 @@ function CreateWorkoutTemplateForm({
             onHandleChosenExercise={onHandleChosenExercise}
             isAddExerciseInputOpen={isAddExerciseInputOpen}
             onSetIsAddExerciseInputOpen={onSetIsAddExerciseInputOpen}
+            onSetChosenExerciseList={onSetChosenExerciseList}
           />
         </form>
       </div>
@@ -331,6 +334,7 @@ function AddExercisetoTemplateInput({
   onHandleChosenExercise,
   isAddExerciseInputOpen,
   onSetIsAddExerciseInputOpen,
+  onSetChosenExerciseList,
 }) {
   function handleSetIsAddExerciseOpen(e) {
     e.preventDefault();
@@ -345,9 +349,10 @@ function AddExercisetoTemplateInput({
           <button
             onClick={(e) => {
               handleSetIsAddExerciseOpen(e);
+              onSetChosenExerciseList([]);
             }}
           >
-            x
+            Cancel new template
           </button>
           <select onChange={(e) => onHandleChosenExercise(e)}>
             <option>Choose an exercise</option>
