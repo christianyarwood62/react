@@ -332,15 +332,14 @@ function CreateWorkoutTemplateForm({
               Add an exercise
             </button>
           )}
-          {exercisesInSelectBox.map((i, exercise) => (
-            <AddExercisetoTemplateInput
-              exercises={exercises}
-              key={`temp-${exercise}-exercise`}
-              chosenExercise={chosenExercise}
-              onAddChosenExercisesList={onAddChosenExercisesList}
-              onHandleChosenExercise={onHandleChosenExercise}
-            />
-          ))}
+          <AddExercisetoTemplateInput
+            exercises={exercises}
+            chosenExercise={chosenExercise}
+            onAddChosenExercisesList={onAddChosenExercisesList}
+            onHandleChosenExercise={onHandleChosenExercise}
+            isAddExerciseInputOpen={isAddExerciseInputOpen}
+            onSetIsAddExerciseInputOpen={setIsAddExerciseInputOpen}
+          />
         </form>
       </div>
     </div>
@@ -352,15 +351,20 @@ function AddExercisetoTemplateInput({
   onAddChosenExercisesList,
   chosenExercise,
   onHandleChosenExercise,
+  isAddExerciseInputOpen,
+  onSetIsAddExerciseInputOpen,
 }) {
-  const [exerciseIsSelected, setExerciseIsSelected] = useState(false);
+  function handleSetIsAddExerciseOpen(e) {
+    e.preventDefault();
+    onSetIsAddExerciseInputOpen(false);
+  }
 
   return (
     <div>
-      {exerciseIsSelected ? (
-        ""
-      ) : (
+      {" "}
+      {isAddExerciseInputOpen ? (
         <div>
+          <button onClick={(e) => handleSetIsAddExerciseOpen(e)}>x</button>
           <select onChange={(e) => onHandleChosenExercise(e)}>
             <option>Choose an exercise</option>
             {exercises.map((exercise, i) => (
@@ -373,6 +377,8 @@ function AddExercisetoTemplateInput({
             Add
           </button>
         </div>
+      ) : (
+        <div></div>
       )}
     </div>
   );
