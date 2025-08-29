@@ -226,7 +226,11 @@ function WorkoutTab({
     useState(false);
   const [chosenExercisesList, setChosenExerciseList] = useState([]);
   const [chosenExercise, setChosenExercise] = useState([]);
+  const [templateName, setTemplateName] = useState("");
 
+  function handleSetTemplateName(name) {
+    setTemplateName(name.target.value);
+  }
   function handleChosenExercise(exercise) {
     setChosenExercise(exercise.target.value);
   }
@@ -255,8 +259,15 @@ function WorkoutTab({
           onHandleChosenExercise={handleChosenExercise}
         />
       )}
-      <ExerciseTemplate chosenExercisesList={chosenExercisesList} />
-      <WorkoutTemplateList />
+      <ExerciseTemplate
+        onSetTemplateName={handleSetTemplateName}
+        templateName={templateName}
+        chosenExercisesList={chosenExercisesList}
+      />
+      <WorkoutTemplateList
+        chosenExercisesList={chosenExercisesList}
+        onSetTemplateName={handleSetTemplateName}
+      />
       <RoutineList
         className="routine-list"
         exerciseRoutine={exerciseRoutine}
@@ -355,8 +366,8 @@ function AddExercisetoTemplateInput({
         <div>
           <select onChange={(e) => onHandleChosenExercise(e)}>
             <option>Choose an exercise</option>
-            {exercises.map((exercise) => (
-              <option>{exercise.name}</option>
+            {exercises.map((exercise, i) => (
+              <option key={`exercise-${i}`}>{exercise.name}</option>
             ))}
           </select>
           <button
@@ -370,32 +381,55 @@ function AddExercisetoTemplateInput({
   );
 }
 
-function ExerciseTemplate({ chosenExercisesList }) {
+function ExerciseTemplate({
+  templateName,
+  onSetTemplateName,
+  chosenExercisesList,
+}) {
   const [proposedWorkoutTemplate, setProposedWorkoutTemplate] = useState(null);
+  const [templateList, setTemplateList] = useState([]);
 
   function handleAddProposedWorkoutTemplate(e) {
     e.preventDefault();
-    setProposedWorkoutTemplate();
+    setProposedWorkoutTemplate({ templateName });
+    const newTemplate = [templateName, ...chosenExercisesList];
+    setTemplateList([...templateList, newTemplate]);
   }
 
   return (
     <div className="container">
       <h2>This is a provisional workout template:</h2>
       <form onSubmit={handleAddProposedWorkoutTemplate}>
-        <input placeholder="Enter Template Name" />
-        {chosenExercisesList?.map((exercise) => (
-          <div>{exercise}</div>
+        <input
+          onChange={(e) => onSetTemplateName(e)}
+          value={templateName}
+          placeholder="Enter Template Name"
+        />
+        {chosenExercisesList?.map((exercise, i) => (
+          <div key={`exercise-in-template-${i}`}>{exercise}</div>
         ))}
         <button>Save Template</button>
       </form>
+      {templateList &&
+        templateList.map((item) => (
+          <div>
+            {item.map((element, i) =>
+              // return <h2>test</h2>;
+              i === 0 ? <h2>{element}</h2> : <div>{element}</div>
+            )}
+          </div>
+        ))}
     </div>
   );
 }
 
-function WorkoutTemplateList() {
+function WorkoutTemplateList({ chosenExercisesList }) {
   return (
     <div className="container">
       <h2>This is your template list</h2>
+      {chosenExercisesList.map(() => (
+        <div>test</div>
+      ))}
     </div>
   );
 }
