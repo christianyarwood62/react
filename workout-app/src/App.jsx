@@ -83,8 +83,6 @@ const initialExercises = [
 
 const initialExercisesInTemplate = [];
 
-// const workoutHistory = [{ test }];
-
 const initialExerciseRoutine = [];
 
 const tab1 = "Exercises";
@@ -182,13 +180,7 @@ function WorkoutList({
   );
 }
 
-function Exercise({
-  exercise,
-  children,
-  onSelection,
-  selectedExercise,
-  onAddToWorkout,
-}) {
+function Exercise({ exercise, children, onSelection, selectedExercise }) {
   const isSelected = selectedExercise?.id === exercise.id;
 
   return (
@@ -219,19 +211,14 @@ function ExerciseDetails({ selectedExercise, onSelection }) {
   );
 }
 
-function WorkoutTab({
-  exerciseRoutine,
-  chosenExerciseForRoutine,
-  onAddToWorkout,
-  exercises,
-  templateList = { templateList },
-  onSetTemplateList = { onSetTemplateList },
-}) {
+function WorkoutTab({ exercises, templateList, onSetTemplateList }) {
   const [showCreateWorkoutTemplate, setShowCreateWorkoutTemplate] =
     useState(false);
   const [chosenExercisesList, setChosenExerciseList] = useState([]);
   const [chosenExercise, setChosenExercise] = useState([]);
   const [templateName, setTemplateName] = useState("");
+  const [isExerciseTemplateListOpen, setIsExerciseTemplateListOpen] =
+    useState(false);
 
   function handleSetTemplateName(name) {
     setTemplateName(name.target.value);
@@ -251,9 +238,8 @@ function WorkoutTab({
 
   return (
     <div>
-      <TemplateList
+      <TemplateWorkout
         onShowCreateWorkoutTemplate={handleShowCreateWorkoutTemplate}
-        onAddToWorkout={onAddToWorkout}
       />
       {showCreateWorkoutTemplate && (
         <CreateWorkoutTemplateForm
@@ -262,45 +248,29 @@ function WorkoutTab({
           onAddChosenExercisesList={handleAddExerciseToTemplate}
           chosenExercise={chosenExercise}
           onHandleChosenExercise={handleChosenExercise}
+          onSetIsAddExerciseInputOpen={setIsExerciseTemplateListOpen}
         />
       )}
-      <ExerciseTemplate
-        onSetTemplateName={handleSetTemplateName}
-        templateName={templateName}
-        chosenExercisesList={chosenExercisesList}
-        templateList={templateList}
-        onSetTemplateList={onSetTemplateList}
-      />
+      {isExerciseTemplateListOpen && (
+        <ProposedExerciseTemplateList
+          onSetTemplateName={handleSetTemplateName}
+          templateName={templateName}
+          chosenExercisesList={chosenExercisesList}
+          templateList={templateList}
+          onSetTemplateList={onSetTemplateList}
+          isExerciseTemplateListOpen={isExerciseTemplateListOpen}
+        />
+      )}
+      <WorkoutTemplateList templateList={templateList} />
     </div>
   );
 }
 
-function TemplateList({ onAddToWorkout, onShowCreateWorkoutTemplate }) {
-  return (
-    <div className="container">
-      <h2>Templates</h2>
-      <TemplateWorkout
-        onShowCreateWorkoutTemplate={onShowCreateWorkoutTemplate}
-        onAddToWorkout={onAddToWorkout}
-      />
-    </div>
-  );
-}
-
-function TemplateWorkout({ onAddToWorkout, onShowCreateWorkoutTemplate }) {
+function TemplateWorkout({ onShowCreateWorkoutTemplate }) {
   return (
     <div className="container">
       <button onClick={() => onShowCreateWorkoutTemplate()}>
-        Create Template
-      </button>
-      <h3>Template xxx</h3>
-      <p>Bench Press</p>
-      <button onClick={() => onAddToWorkout("bench press")}>
-        Add to Workout
-      </button>
-      <p>Shoulder press</p>
-      <button onClick={() => onAddToWorkout("Shoulder press")}>
-        Add to Workout
+        Add a new workout
       </button>
     </div>
   );
@@ -311,6 +281,7 @@ function CreateWorkoutTemplateForm({
   onAddChosenExercisesList,
   chosenExercise,
   onHandleChosenExercise,
+  onSetIsAddExerciseInputOpen,
 }) {
   const [exercisesInSelectBox, setExercisesInSelectBox] = useState(
     initialExercisesInTemplate
@@ -330,7 +301,7 @@ function CreateWorkoutTemplateForm({
     <div className="container">
       <div>
         <button>x</button>
-        <h2>Create a template:</h2>
+        <h2>New Workout Template!</h2>
         <form>
           {isAddExerciseInputOpen ? (
             ""
@@ -345,7 +316,7 @@ function CreateWorkoutTemplateForm({
             onAddChosenExercisesList={onAddChosenExercisesList}
             onHandleChosenExercise={onHandleChosenExercise}
             isAddExerciseInputOpen={isAddExerciseInputOpen}
-            onSetIsAddExerciseInputOpen={setIsAddExerciseInputOpen}
+            onSetIsAddExerciseInputOpen={onSetIsAddExerciseInputOpen}
           />
         </form>
       </div>
@@ -371,7 +342,13 @@ function AddExercisetoTemplateInput({
       {" "}
       {isAddExerciseInputOpen ? (
         <div>
-          <button onClick={(e) => handleSetIsAddExerciseOpen(e)}>x</button>
+          <button
+            onClick={(e) => {
+              handleSetIsAddExerciseOpen(e);
+            }}
+          >
+            x
+          </button>
           <select onChange={(e) => onHandleChosenExercise(e)}>
             <option>Choose an exercise</option>
             {exercises.map((exercise, i) => (
@@ -379,7 +356,10 @@ function AddExercisetoTemplateInput({
             ))}
           </select>
           <button
-            onClick={(e) => onAddChosenExercisesList(e, { chosenExercise })}
+            onClick={(e) => {
+              onAddChosenExercisesList(e, { chosenExercise });
+              onSetIsAddExerciseInputOpen(true);
+            }}
           >
             Add
           </button>
@@ -391,11 +371,10 @@ function AddExercisetoTemplateInput({
   );
 }
 
-function ExerciseTemplate({
+function ProposedExerciseTemplateList({
   templateName,
   onSetTemplateName,
   chosenExercisesList,
-  setTemplateList,
   onSetTemplateList,
   templateList,
 }) {
@@ -422,12 +401,20 @@ function ExerciseTemplate({
         ))}
         <button>Save Template</button>
       </form>
+    </div>
+  );
+}
+
+function WorkoutTemplateList({ templateList }) {
+  return (
+    <div className="container">
+      <h2>This is the list of templates you have created:</h2>
       {templateList &&
         templateList.map((item, i) => (
           <div key={`template-${i}`}>
             {item.map((element, i) =>
               i === 0 ? (
-                <h2 key={`template-header-${i}`}>{element}</h2>
+                <h3 key={`template-header-${i}`}>{element}</h3>
               ) : (
                 <div key={`template-exercise-${i}`}>{element}</div>
               )
