@@ -229,7 +229,9 @@ function WorkoutTab({ exercises, templateList, onSetTemplateList }) {
 
   function handleAddExerciseToTemplate(e) {
     e.preventDefault();
-    setChosenExerciseList(() => [...chosenExercisesList, chosenExercise]);
+    chosenExercise === "Choose an exercise"
+      ? ""
+      : setChosenExerciseList(() => [...chosenExercisesList, chosenExercise]);
   }
 
   function handleShowCreateWorkoutTemplate() {
