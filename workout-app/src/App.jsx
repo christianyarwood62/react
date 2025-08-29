@@ -287,7 +287,6 @@ function CreateWorkoutTemplateForm({
   onHandleChosenExercise,
   onSetIsAddExerciseInputOpen,
   onSetChosenExerciseList,
-  onSetIsTemplateWorkoutOpen,
   onShowCreateWorkoutTemplate,
 }) {
   const [exercisesInSelectBox, setExercisesInSelectBox] = useState(
@@ -414,9 +413,13 @@ function ProposedExerciseTemplateList({
           value={templateName}
           placeholder="Enter Template Name"
         />
-        {chosenExercisesList?.map((exercise, i) => (
-          <div key={`exercise-in-template-${i}`}>{exercise}</div>
-        ))}
+        {chosenExercisesList?.map((exercise, i) =>
+          exercise === "Choose an exercise" ? (
+            ""
+          ) : (
+            <div key={`exercise-in-template-${i}`}>{exercise}</div>
+          )
+        )}
         <button>Save Template</button>
       </form>
     </div>
