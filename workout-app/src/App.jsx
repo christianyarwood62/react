@@ -100,6 +100,7 @@ function App() {
   );
   const [chosenExerciseForRoutine, setChosenExerciseForRoutine] =
     useState(null);
+  const [templateList, setTemplateList] = useState([]);
 
   function handleSetTab(tab) {
     setTab(tab);
@@ -146,6 +147,8 @@ function App() {
           chosenExerciseForRoutine={chosenExerciseForRoutine}
           onAddToWorkout={handleAddExerciseToRoutine}
           exercises={exercises}
+          templateList={templateList}
+          onSetTemplateList={setTemplateList}
         />
       )}
       {tab === tab3 && <ExerciseHistoryTab />}
@@ -221,6 +224,8 @@ function WorkoutTab({
   chosenExerciseForRoutine,
   onAddToWorkout,
   exercises,
+  templateList = { templateList },
+  onSetTemplateList = { onSetTemplateList },
 }) {
   const [showCreateWorkoutTemplate, setShowCreateWorkoutTemplate] =
     useState(false);
@@ -263,6 +268,8 @@ function WorkoutTab({
         onSetTemplateName={handleSetTemplateName}
         templateName={templateName}
         chosenExercisesList={chosenExercisesList}
+        templateList={templateList}
+        onSetTemplateList={onSetTemplateList}
       />
     </div>
   );
@@ -388,15 +395,17 @@ function ExerciseTemplate({
   templateName,
   onSetTemplateName,
   chosenExercisesList,
+  setTemplateList,
+  onSetTemplateList,
+  templateList,
 }) {
   const [proposedWorkoutTemplate, setProposedWorkoutTemplate] = useState(null);
-  const [templateList, setTemplateList] = useState([]);
 
   function handleAddProposedWorkoutTemplate(e) {
     e.preventDefault();
     setProposedWorkoutTemplate({ templateName });
     const newTemplate = [templateName, ...chosenExercisesList];
-    setTemplateList([...templateList, newTemplate]);
+    onSetTemplateList([...templateList, newTemplate]);
   }
 
   return (
@@ -414,11 +423,14 @@ function ExerciseTemplate({
         <button>Save Template</button>
       </form>
       {templateList &&
-        templateList.map((item) => (
-          <div>
+        templateList.map((item, i) => (
+          <div key={`template-${i}`}>
             {item.map((element, i) =>
-              // return <h2>test</h2>;
-              i === 0 ? <h2>{element}</h2> : <div>{element}</div>
+              i === 0 ? (
+                <h2 key={`template-header-${i}`}>{element}</h2>
+              ) : (
+                <div key={`template-exercise-${i}`}>{element}</div>
+              )
             )}
           </div>
         ))}
