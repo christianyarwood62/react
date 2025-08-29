@@ -238,9 +238,11 @@ function WorkoutTab({ exercises, templateList, onSetTemplateList }) {
 
   return (
     <div>
-      <TemplateWorkout
-        onShowCreateWorkoutTemplate={handleShowCreateWorkoutTemplate}
-      />
+      {!showCreateWorkoutTemplate && (
+        <TemplateWorkout
+          onShowCreateWorkoutTemplate={handleShowCreateWorkoutTemplate}
+        />
+      )}
       {showCreateWorkoutTemplate && (
         <CreateWorkoutTemplateForm
           exercises={exercises}
@@ -250,6 +252,7 @@ function WorkoutTab({ exercises, templateList, onSetTemplateList }) {
           onHandleChosenExercise={handleChosenExercise}
           onSetIsAddExerciseInputOpen={setIsExerciseTemplateListOpen}
           onSetChosenExerciseList={setChosenExerciseList}
+          onShowCreateWorkoutTemplate={handleShowCreateWorkoutTemplate}
         />
       )}
       {isExerciseTemplateListOpen && (
@@ -284,6 +287,8 @@ function CreateWorkoutTemplateForm({
   onHandleChosenExercise,
   onSetIsAddExerciseInputOpen,
   onSetChosenExerciseList,
+  onSetIsTemplateWorkoutOpen,
+  onShowCreateWorkoutTemplate,
 }) {
   const [exercisesInSelectBox, setExercisesInSelectBox] = useState(
     initialExercisesInTemplate
@@ -302,7 +307,15 @@ function CreateWorkoutTemplateForm({
   return (
     <div className="container">
       <div>
-        <button>x</button>
+        <button
+          onClick={() => {
+            onShowCreateWorkoutTemplate();
+            onSetIsAddExerciseInputOpen(false);
+            onSetChosenExerciseList([]);
+          }}
+        >
+          x
+        </button>
         <h2>New Workout Template!</h2>
         <form>
           {isAddExerciseInputOpen ? (
