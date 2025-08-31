@@ -753,7 +753,7 @@ function Error() {
 
 ## Browser Paint phase
 
-1)updated UI on the screen
+1. updated UI on the screen
 
 ## How Diffing works
 
@@ -877,3 +877,44 @@ function Error() {
 - multiple state updates inside an event handler are batched, happening all at once, causing 1 re render. State updates are asynchronous
 - when using events in event handlers, we get access to synthetic event object so events work similar across browsers
 - react is a library, not a framework, so can use your own 3rd party libraries
+
+# Effects and Data Fetching
+
+## Component (instance) lifecycle
+
+1. mount / initial render:
+
+- fresh state and props created
+
+2. re render (optional), happens when:
+
+- state changes
+- props change
+- parent re renders
+- context changes
+
+3. Unmount
+
+- component instance is destroyed and removed
+- state and props are destroyed
+
+# UseEffect
+
+- used to keep a component synchronized with some xternal system (e.g. API data)
+- executed after component mounts, and after subsequenct re-renders according to dependency array
+  - the dependency array is the second argument to useEffect:
+
+```
+useEffect(function() {
+  fetch('...')
+    .then((response) = response.json())
+    .then((data) => doSomething(data));
+
+    return () => console.log('Cleanup) // this is the cleanup function
+}, []) // This [] is the dependency array, this example particularly means to execute effect after initial mount
+```
+
+- Event handlerss on the other hand:
+  - executed when an event happens
+  - used to react to an event
+  - **The preferred way of creating side effects! Dont overuse useEffect**
