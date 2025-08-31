@@ -918,3 +918,24 @@ useEffect(function() {
   - executed when an event happens
   - used to react to an event
   - **The preferred way of creating side effects! Dont overuse useEffect**
+
+## Dependency array
+
+- by default, effects run after every render. we can prevent this by passing a dependency array
+- without dependency array, react doesnt know when to run the effect
+- each time one of the dependencies changes, the effect will be executed again
+- every state variable and prop used inside the effect MUST be included in the dependency array
+
+- useEffect is like an event listener that is listening for one dependency to change. Whenever a dependency changes, it will execute the effect again
+- effects react to updates to state and props used inside the effect (the dependencies). So effects are 'reactive' (like state updates re rendering the UI)
+- we can use dependency array to run effects when component renders or re-renders
+- the 3 dependency arrays (examples below) we can use:
+  1. useEffect(fn, [x, y, z]);
+  - effect synchronizes with x, y, z
+  - runs on mount and re renders triggers by updating x, y, or z
+  2. useEffect(fn, {});
+  - effect synchronizes with no state/props
+  - runs only on mount (initial render)
+  3. useEffect(fn);
+  - effect synchronizes with everything
+  - runs on every render (usually bad!)
