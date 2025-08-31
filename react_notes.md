@@ -791,3 +791,89 @@ function Error() {
 ### Key prop to reset state [changing key]
 
 - give element a key if you want state to update, remember to change key with the different element
+
+## Render logic vs event handler logic
+
+- render logic is the use state lines, and the return scopes
+- event handlers are the onchange events for example
+
+## Functional programming principles
+
+1. side effects
+
+- dependency or modification on data outside function scope, e.g. HTTP requests, writing to DOM, mutating external variables, setting timers
+- side effects arent bad!
+
+2. pure functions
+
+- functions with no side effects, given same input, output returns the same always
+
+### rules for render logic
+
+- components must be pure when it comes to render logic
+- render logic must produce no side effects: e.g.:
+  - do not network requests (APIs)
+  - do not start timers
+  - do not directly use DOM API
+  - do not mutate objects or variables outside function scope
+  - do not update state (or refs), this create infinite loop
+    **- side effects are encouraged in event handler functions, with useEffects hook**
+
+## State update batching
+
+- if multiple states are updated in an event handler, react only re renders once, not for each state update
+- updating state in react is asynchronous
+- if you want to update state **based on previous update**, we use seState with callback (setState(answer => ...)). this is the curr example in the eat n split project
+
+## How events work in react
+
+- react doesnt place event handlers in the target element, it will actually handle the event at the root of the app, i.e. react registers all event handlers on root DOM container
+
+### Synthetic events
+
+- the e is different in react, e.g. function (e) => ...
+- synthetic events are a thin wrapper around the DOMs native event (native event being PointerEvent, MouseEvent, KeyboardEvent, etc.), i.e. similar to vanilla js events, but add some functionality
+- synthetic events have same interface as native event objects, like stopPropagation() and preventDefault()
+- they fix browser inconsistencies
+- most synthetic events bubble (including focus, blur, change), which dont usually bubble in vanilla
+- use camelCase for attributes for events handlers in react, e.g. onClick (react) vs click (vanilla)
+
+## Libraries vs frameworks & react ecosystem
+
+1. framework:
+
+- an all-in-one kit
+- frameworks include everything, e.g. HTTP requests, styling, routing, form management
+- everything you ened to build an app is included
+- youre stuck with framework tools anf conventions
+
+2. react:
+
+- a view library
+- doesnt include libraries, have to use external libraries for HTTP requests, styling, etc.
+- can choose different 3rd party libraries to build the app
+- need to be able to stay up to date with new external libraries (not as bad as you think!)
+
+### React 3rd party library ecosystem
+
+- has so many!!
+
+#### frameworks built on top of react
+
+- e.g. Next.js, Remix, Gatsby
+- these would be similar to Angular or others where libraries are included (HTPP requests, etc.). These are full stack frameworks.
+
+## Practical takeaways:
+
+- component is a piece of UI blueprint, react creates a component instance from this blueprint. when rendered a react element is created
+- rendering only means calling component functions to render and render. nothing to do with writing to DOM
+- only initial app render and state updates cause renders
+- all children will get re rendered when instance is re rendered.
+- diffing is how react decides which DOM elements are modified, good for performance. if position is changes or element type is changes, DOM element and state will be destroyed
+- giving element key props allow react to distinguish between multiple components. use this trick to reset state
+- never declare a new component inside another component
+- logic that produces JSX output for a component instance is not allowed to produce side effects, no API calls, no timers, etc.
+- ReactDOM updates DOM in the commit phase, thats why we need to include this library
+- multiple state updates inside an event handler are batched, happening all at once, causing 1 re render. State updates are asynchronous
+- when using events in event handlers, we get access to synthetic event object so events work similar across browsers
+- react is a library, not a framework, so can use your own 3rd party libraries
