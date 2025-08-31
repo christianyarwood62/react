@@ -45,6 +45,7 @@ export default function App() {
 
   function handleSelection(friend) {
     // setSelectedFriend(friend);
+    // cur is the current state value of selectedFriend, i.e. the previous value of selectedFriend
     setSelectedFriend((cur) => (cur?.id === friend.id ? null : friend));
     setShowAddFriend(false);
   }
@@ -80,6 +81,7 @@ export default function App() {
         <FormSplitBill
           selectedFriend={selectedFriend}
           onSplitBill={handleSplitBill}
+          // a key allows react to see each component as a different instance and will re render when selecting a new friend
           key={selectedFriend.id}
         />
       )}
