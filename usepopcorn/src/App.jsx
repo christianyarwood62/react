@@ -55,7 +55,7 @@ const average = (arr) =>
 const KEY = "71f8f38f";
 
 export default function App() {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState("inception");
   const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -98,7 +98,7 @@ export default function App() {
           setError(""); // Need to reset error to empty string so it avoids the catch statement when you try and update the search bar
           setIsLoading(true);
           const res = await fetch(
-            `http://www.omdbapi.com/?apikey=${KEY}&S=${query}`
+            `https://www.omdbapi.com/?apikey=${KEY}&s=${query}`
           );
 
           if (!res.ok)
@@ -318,6 +318,7 @@ function Movie({ movie, onSelectMovie }) {
 function MovieDetails({ selectedId, onCloseMovie, onAddWatched }) {
   const [movie, setMovie] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [userRating, setUserRating] = useState("");
 
   /*
   This is destructuring an object, 
@@ -347,6 +348,7 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched }) {
       poster,
       imdbRating: Number(imdbRating),
       runtime: Number(runtime.split(" ").at(0)), // Because the runtime in the object would be e.g. 92 minutes
+      userRating,
     };
     onAddWatched(newWatchedMovie);
     onCloseMovie();
@@ -357,7 +359,7 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched }) {
       async function getMovieDetails() {
         setIsLoading(true);
         const res = await fetch(
-          `http://www.omdbapi.com/?apikey=${KEY}&i=${selectedId}`
+          `https://www.omdbapi.com/?apikey=${KEY}&i=${selectedId}`
         );
         const data = await res.json();
         setMovie(data);
@@ -395,11 +397,17 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched }) {
 
           <section>
             <div className="rating">
-              <StarRating maxRating={10} size={24} />
+              <StarRating
+                maxRating={10}
+                size={24}
+                onSetRating={setUserRating}
+              />
 
-              <button className="btn-add" onClick={handleAdd}>
-                Add to list
-              </button>
+              {userRating > 0 && (
+                <button className="btn-add" onClick={handleAdd}>
+                  Add to list
+                </button>
+              )}
             </div>
             <p>
               <em>{plot}</em>
