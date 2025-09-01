@@ -54,42 +54,72 @@ const average = (arr) =>
 const KEY = "71f8f38f";
 
 export default function App() {
+  const [query, setQuery] = useState("");
   const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
-  const query = "advadv";
+  const [error, setError] = useState(""); // a blank string is falsy
+  const tempQuery = "interstellar";
 
-  useEffect(function () {
-    async function fetchMovies() {
-      try {
-        setIsLoading(true);
-        const res = await fetch(
-          `http://www.omdbapi.com/?apikey=${KEY}&S=${query}`
-        );
+  // useEffect(function () {
+  //   console.log("After initial render");
+  // }, []);
 
-        if (!res.ok)
-          throw new Error("Something went wrong with fetching movies");
+  // useEffect(function () {
+  //   console.log("After every render");
+  // });
 
-        const data = await res.json();
-        if (data.Response === "False") throw new Error("Movie not found");
+  // useEffect(
+  //   function () {
+  //     console.log("D");
+  //   },
+  //   [query]
+  // );
 
-        setMovies(data.Search);
-      } catch (err) {
-        console.error(err.message);
-        setError(err.message);
-      } finally {
-        setIsLoading(false);
+  // console.log("During render");
+
+  useEffect(
+    function () {
+      async function fetchMovies() {
+        try {
+          setError(""); // Need to reset error to empty string so it avoids the catch statement when you try and update the search bar
+          setIsLoading(true);
+          const res = await fetch(
+            `http://www.omdbapi.com/?apikey=${KEY}&S=${query}`
+          );
+
+          if (!res.ok)
+            throw new Error("Something went wrong with fetching movies");
+
+          const data = await res.json();
+          if (data.Response === "False") throw new Error("Movie not found");
+
+          setMovies(data.Search);
+        } catch (err) {
+          console.error(err.message);
+          setError(err.message);
+        } finally {
+          setIsLoading(false);
+        }
       }
-    }
-    fetchMovies(); // Have to call the function because useEffect only declares the function
-  }, []); // the [] means that this effect will only be executed when it first mounts, i.e. after first render
+
+      if (query.length < 3) {
+        setMovies([]);
+        setError("");
+        return;
+      }
+
+      fetchMovies(); // Have to call the function because useEffect only declares the function
+    },
+    [query]
+  ); // Empty [] means that this effect will only be executed when it first mounts, i.e. after first render
+  // a filled [] means theres a dependency on a variable
 
   return (
     <>
       <NavBar>
         <Logo />
-        <Search />
+        <Search query={query} setQuery={setQuery} />
         <NumResults movies={movies} />
       </NavBar>
       <Main>
@@ -157,9 +187,7 @@ function Logo() {
     </div>
   );
 }
-function Search() {
-  const [query, setQuery] = useState("");
-
+function Search({ query, setQuery }) {
   return (
     <input
       className="search"
