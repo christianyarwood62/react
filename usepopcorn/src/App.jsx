@@ -97,12 +97,15 @@ export default function App() {
 
   useEffect(
     function () {
+      const controller = new AbortController(); // use this in the cleanup function. This is a browser API, just like the fetch function
+
       async function fetchMovies() {
         try {
           setError(""); // Need to reset error to empty string so it avoids the catch statement when you try and update the search bar
           setIsLoading(true);
           const res = await fetch(
-            `https://www.omdbapi.com/?apikey=${KEY}&s=${query}`
+            `https://www.omdbapi.com/?apikey=${KEY}&s=${query}`,
+            { signal: controller.signal } // This is the recipe to use with the controller const above
           );
 
           if (!res.ok)
@@ -113,8 +116,10 @@ export default function App() {
 
           setMovies(data.Search);
         } catch (err) {
-          console.error(err.message);
-          setError(err.message);
+          // This if statement is there because the controller abort below sees the abort as an error and will stop the component displaying the (final typed) movie when rendering
+          if (err.name !== "AbortError") {
+            setError(err.message);
+          }
         } finally {
           setIsLoading(false);
         }
@@ -127,6 +132,11 @@ export default function App() {
       }
 
       fetchMovies(); // Have to call the function because useEffect only declares the function
+
+      // This is the cleanup function.
+      return function () {
+        controller.abort(); // This cancels fetch request everytime theres a new keystroke, to avoid fetching every time a new letter is typed
+      };
     },
     [query]
   ); // Empty [] means that this effect will only be executed when it first mounts, i.e. after first render
@@ -387,6 +397,7 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
       if (!title) return;
       document.title = `Movie | ${title}`;
 
+      // This is the cleanup function
       return function () {
         document.title = "usePopcorn";
       };
