@@ -376,6 +376,19 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
     onCloseMovie();
   }
 
+  // If you put this useEffect in the App component then it would always listen for Escape even when no MovieDetails are showing on the right
+  useEffect(
+    function () {
+      document.addEventListener("keydown", function (e) {
+        if (e.code === "Escape") {
+          onCloseMovie();
+          console.log("CLOSING");
+        }
+      }); // Can use this addEventListener (A DOM function) because this steps out of react and can use plain js
+    },
+    [onCloseMovie] // Have to use this function in the dependency array
+  );
+
   useEffect(
     function () {
       async function getMovieDetails() {
