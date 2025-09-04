@@ -95,6 +95,7 @@ export default function App() {
     setWatched((watched) => watched.filter((movie) => movie.imdbID !== id));
   }
 
+  // This shouldnt really be a useEffect hook (instead should be an event handle function) because on mount, it doesnt fetch any data
   useEffect(
     function () {
       const controller = new AbortController(); // use this in the cleanup function. This is a browser API, just like the fetch function
