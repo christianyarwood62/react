@@ -55,7 +55,7 @@ const average = (arr) =>
 const KEY = "71f8f38f";
 
 export default function App() {
-  const [query, setQuery] = useState("inception");
+  const [query, setQuery] = useState("");
   const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -103,6 +103,7 @@ export default function App() {
         try {
           setError(""); // Need to reset error to empty string so it avoids the catch statement when you try and update the search bar
           setIsLoading(true);
+
           const res = await fetch(
             `https://www.omdbapi.com/?apikey=${KEY}&s=${query}`,
             { signal: controller.signal } // This is the recipe to use with the controller const above
@@ -115,9 +116,11 @@ export default function App() {
           if (data.Response === "False") throw new Error("Movie not found");
 
           setMovies(data.Search);
+          setError("");
         } catch (err) {
           // This if statement is there because the controller abort below sees the abort as an error and will stop the component displaying the (final typed) movie when rendering
           if (err.name !== "AbortError") {
+            console.log(err.message);
             setError(err.message);
           }
         } finally {
@@ -131,6 +134,7 @@ export default function App() {
         return;
       }
 
+      handleCloseMovie();
       fetchMovies(); // Have to call the function because useEffect only declares the function
 
       // This is the cleanup function.
@@ -420,7 +424,7 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
       // This is the cleanup function
       return function () {
         document.title = "usePopcorn";
-        // console.log(`Clean up effect for movie {title}`);
+        // console.log(`Clean up effect for movie ${title}`);
       };
     },
     [title]
