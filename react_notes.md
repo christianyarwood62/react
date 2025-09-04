@@ -985,3 +985,21 @@ Most used:
 - or based on current state, e.g. setCount((c) => c + 1)
   - functions must be **pure** and return next state
 - **make sure to never mutate objects or arrays, but \***replace**\* them instead**
+
+## useRef
+
+- e.g. const myRef = useRef(23)
+  - can then do something like this: myRef.current = 1000; // see how you can mutate this directly?
+- a box (object) with a mutable .current property that is **persisted across renders**
+- 2 big use cases:
+  1. Creating a variable that stays same between renders (e.g. previous state, setTimeout id, etc.)
+  2. (MORE IMPORTANT) selecting and storing DOM elements
+- refs are for **data that is NOT rendered**: usually only appear in event handlers or effects, not in JSX (otherwise use state)
+- do NOT read write or read .current in render logic (like state)
+
+### State vs Refs
+
+- both persist across renders
+- refs updating dont cause re renders, state updating does
+- refs are mutable, state is immutable
+- refs arent asynchronously updated, state is
