@@ -939,3 +939,49 @@ useEffect(function() {
   3. useEffect(fn);
   - effect synchronizes with everything
   - runs on every render (usually bad!)
+
+## Cleanup function
+
+- function that we can return from an effect (optional)
+- runs on 2 different ocassions:
+  1. before effect is executed again
+  2. after a component has unmounted
+- necessary whenever the side effect keeps happening after the component has been re rendered or unmounted
+  - e.g. (the effect on the left, the potential cleanup on the right)
+    - HTTP request => cancel request
+    - API subscription => cancel subscription
+    - Start timer => stop timer
+    - Add event listener => remove listener
+- each effect should only do one thing
+
+# Hooks:
+
+Most used:
+
+- useEffect
+- useState
+- useReducer
+- useContext
+
+## Rules of hooks
+
+1. only called at top level, not inside loops, conditionals, or early return, etc.
+
+- this is to ensure hooks are called in same order, this is important because react makes a linked list of all used hooks, and deleted hooks would mean the linked list gets completely reordered (BAD)
+
+2. only call hooks from react functions, e.g. the function component
+
+# Summary overview of useState
+
+1. create state
+
+- either simple, e.g. const [xyz, setxyz] = useState(23)
+- or based on function, e.g. const [count, setCount] = useState(() => localStorage.getItem('count'));
+  - functions must be **pure** and accept **no arguments**. Called only on initial render
+
+2. updating the state:
+
+- either simple way, e.g. setCount(1000);
+- or based on current state, e.g. setCount((c) => c + 1)
+  - functions must be **pure** and return next state
+- **make sure to never mutate objects or arrays, but \***replace**\* them instead**
