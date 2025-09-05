@@ -124,9 +124,24 @@ function App() {
       <header>
         <h1>Dream Workout</h1>
         <nav>
-          <button onClick={() => handleSetTab(tab1)}>{tab1}</button>
-          <button onClick={() => handleSetTab(tab2)}>{tab2}</button>
-          <button onClick={() => handleSetTab(tab3)}>{tab3}</button>
+          <button
+            className={tab === tab1 ? "selectedTab" : ""}
+            onClick={() => handleSetTab(tab1)}
+          >
+            {tab1}
+          </button>
+          <button
+            className={tab === tab2 ? "selectedTab" : ""}
+            onClick={() => handleSetTab(tab2)}
+          >
+            {tab2}
+          </button>
+          <button
+            className={tab === tab3 ? "selectedTab" : ""}
+            onClick={() => handleSetTab(tab3)}
+          >
+            {tab3}
+          </button>
         </nav>
       </header>
       {tab === tab1 && (

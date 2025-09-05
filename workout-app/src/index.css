@@ -37,6 +37,7 @@ header {
   top: 0;
 }
 
+/* The header for the page*/
 header h1 {
   color: #333;
 }
@@ -44,6 +45,8 @@ header h1 {
 nav {
   gap: 100px;
 }
+
+/* The buttons for the navbar tabs*/
 nav button {
   background: none;
   border: none;
@@ -53,4 +56,12 @@ nav button {
   padding: 0.5rem 1rem;
   border-radius: 6px;
   gap: 10px;
+}
+
+nav button:hover {
+  color: rgb(107, 184, 209);
+}
+
+.selectedTab {
+  background-color: lightblue;
 }
