@@ -114,13 +114,21 @@ function App() {
     setExerciseRoutine((exerciseRoutine) => [...exerciseRoutine, exercise]);
   }
 
+  /*
+  NOTE: Dont need to put {()=> handlexxx()} if there is no argument,
+  i.e. just write {handlexxx}
+  */
+
   return (
     <div className="app">
-      <nav>
-        <button onClick={() => handleSetTab(tab1)}>{tab1}</button>
-        <button onClick={() => handleSetTab(tab2)}>{tab2}</button>
-        <button onClick={() => handleSetTab(tab3)}>{tab3}</button>
-      </nav>
+      <header>
+        <h1>Dream Workout</h1>
+        <nav>
+          <button onClick={() => handleSetTab(tab1)}>{tab1}</button>
+          <button onClick={() => handleSetTab(tab2)}>{tab2}</button>
+          <button onClick={() => handleSetTab(tab3)}>{tab3}</button>
+        </nav>
+      </header>
       {tab === tab1 && (
         <div className="exercise-details-tab">
           <WorkoutList
@@ -368,7 +376,10 @@ function AddExercisetoTemplateInput({
           >
             Cancel new template
           </button>
-          <select onChange={(e) => onHandleChosenExercise(e)}>
+          <select
+            value={chosenExercise}
+            onChange={(e) => onHandleChosenExercise(e)}
+          >
             <option>Choose an exercise</option>
             {exercises.map((exercise, i) => (
               <option key={`exercise-${i}`}>{exercise.name}</option>
