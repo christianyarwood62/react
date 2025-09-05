@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useState } from "react";
+import { useRef } from "react";
 import StarRating from "./StarRating";
 
 const average = (arr) =>
@@ -16,6 +17,8 @@ export default function App() {
 
   // const [watched, setWatched] = useState([]);
   const [watched, setWatched] = useState(function () {
+    // when initial state depends on some sort of computation, always pass in a pure function to run
+    // DONT DO THIS: useState(localStorage.getItem('watched')) because this would get called on every render
     const storedValue = localStorage.getItem("watched");
     return JSON.parse(storedValue); // need the JSON.parse because we used stringify below to
   });
@@ -195,6 +198,24 @@ function Logo() {
   );
 }
 function Search({ query, setQuery }) {
+  // Can use useRef to select DOM elements
+  const inputEl = useRef(null);
+
+  // Have to do useEffect because the ref prop below in <input> element only gets added to DOM element upon mount, and useEffect also only works once DOM is loaded
+  useEffect(function () {
+    console.log(inputEl.current);
+    inputEl.current.focus();
+  }, []);
+
+  /* Alternative way to use useEffect to select DOM elements, preferred to use useRef shown above
+  
+  useEffect(function () {
+    const el = document.querySelector(".search");
+    console.log(el);
+    el.focus();
+  }, []);
+  */
+
   return (
     <input
       className="search"
@@ -202,6 +223,7 @@ function Search({ query, setQuery }) {
       placeholder="Search movies..."
       value={query}
       onChange={(e) => setQuery(e.target.value)}
+      ref={inputEl}
     />
   );
 }
