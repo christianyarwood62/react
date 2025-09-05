@@ -203,8 +203,17 @@ function Search({ query, setQuery }) {
 
   // Have to do useEffect because the ref prop below in <input> element only gets added to DOM element upon mount, and useEffect also only works once DOM is loaded
   useEffect(function () {
-    console.log(inputEl.current);
-    inputEl.current.focus();
+    function callback(e) {
+      if (document.activeElement === inputEl.current) return;
+
+      if (e.code === "Enter") {
+        inputEl.current.focus();
+        setQuery("");
+      }
+    }
+
+    document.addEventListener("keydown", callback);
+    return () => document.removeEventListener("keydown", callback);
   }, []);
 
   /* Alternative way to use useEffect to select DOM elements, preferred to use useRef shown above
