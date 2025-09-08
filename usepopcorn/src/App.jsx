@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { useRef } from "react";
 import StarRating from "./StarRating";
+import { useMovies } from "./useMovies.jsx";
 
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
@@ -10,10 +11,9 @@ const KEY = "71f8f38f";
 
 export default function App() {
   const [query, setQuery] = useState("");
-  const [movies, setMovies] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(""); // a blank string is falsy
   const [selectedId, setSelectedId] = useState(null);
+
+  const { movies, isLoading, error } = useMovies(query);
 
   // const [watched, setWatched] = useState([]);
   const [watched, setWatched] = useState(function () {
@@ -55,58 +55,6 @@ export default function App() {
     },
     [watched]
   );
-
-  // This shouldnt really be a useEffect hook (instead should be an event handle function) because on mount, it doesnt fetch any data
-  useEffect(
-    function () {
-      const controller = new AbortController(); // use this in the cleanup function. This is a browser API, just like the fetch function
-
-      async function fetchMovies() {
-        try {
-          setError(""); // Need to reset error to empty string so it avoids the catch statement when you try and update the search bar
-          setIsLoading(true);
-
-          const res = await fetch(
-            `https://www.omdbapi.com/?apikey=${KEY}&s=${query}`,
-            { signal: controller.signal } // This is the recipe to use with the controller const above
-          );
-
-          if (!res.ok)
-            throw new Error("Something went wrong with fetching movies");
-
-          const data = await res.json();
-          if (data.Response === "False") throw new Error("Movie not found");
-
-          setMovies(data.Search);
-          setError("");
-        } catch (err) {
-          // This if statement is there because the controller abort below sees the abort as an error and will stop the component displaying the (final typed) movie when rendering
-          if (err.name !== "AbortError") {
-            console.log(err.message);
-            setError(err.message);
-          }
-        } finally {
-          setIsLoading(false);
-        }
-      }
-
-      if (query.length < 3) {
-        setMovies([]);
-        setError("");
-        return;
-      }
-
-      handleCloseMovie();
-      fetchMovies(); // Have to call the function because useEffect only declares the function
-
-      // This is the cleanup function.
-      return function () {
-        controller.abort(); // This cancels fetch request everytime theres a new keystroke, to avoid fetching every time a new letter is typed
-      };
-    },
-    [query]
-  ); // Empty [] means that this effect will only be executed when it first mounts, i.e. after first render
-  // a filled [] means theres a dependency on a variable
 
   return (
     <>
@@ -202,19 +150,22 @@ function Search({ query, setQuery }) {
   const inputEl = useRef(null);
 
   // Have to do useEffect because the ref prop below in <input> element only gets added to DOM element upon mount, and useEffect also only works once DOM is loaded
-  useEffect(function () {
-    function callback(e) {
-      if (document.activeElement === inputEl.current) return;
+  useEffect(
+    function () {
+      function callback(e) {
+        if (document.activeElement === inputEl.current) return; // Dont do anything if the user has selected the search bar and typed stuff in already
 
-      if (e.code === "Enter") {
-        inputEl.current.focus();
-        setQuery("");
+        if (e.code === "Enter") {
+          inputEl.current.focus();
+          setQuery("");
+        }
       }
-    }
 
-    document.addEventListener("keydown", callback);
-    return () => document.removeEventListener("keydown", callback);
-  }, []);
+      document.addEventListener("keydown", callback);
+      return () => document.removeEventListener("keydown", callback);
+    },
+    [setQuery]
+  );
 
   /* Alternative way to use useEffect to select DOM elements, preferred to use useRef shown above
   
@@ -332,6 +283,16 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
   const [isLoading, setIsLoading] = useState(false);
   const [userRating, setUserRating] = useState("");
 
+  // useRef is helpful because it doesnt trigger a re render, but it persists data still
+  const countRef = useRef(0);
+
+  useEffect(
+    function () {
+      if (userRating) countRef.current = countRef.current + 1;
+    },
+    [userRating]
+  );
+
   const isWatched = watched.map((movie) => movie.imdbID).includes(selectedId);
   const watchedUserRating = watched.find(
     (movie) => movie.imdbID === selectedId
@@ -365,6 +326,7 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
       imdbRating: Number(imdbRating),
       runtime: Number(runtime.split(" ").at(0)), // Because the runtime in the object would be e.g. 92 minutes
       userRating,
+      countRatingDecisions: countRef.current,
     };
     onAddWatched(newWatchedMovie);
     onCloseMovie();
