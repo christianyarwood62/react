@@ -1,8 +1,10 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import { useRef } from "react";
-import StarRating from "./StarRating";
+import StarRating from "./StarRating.jsx";
 import { useMovies } from "./useMovies.jsx";
+import { useLocalStorageState } from "./useLocaleStorageState.jsx";
+import { useKey } from "./useKey.jsx";
 
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
@@ -15,13 +17,18 @@ export default function App() {
 
   const { movies, isLoading, error } = useMovies(query);
 
+  const [watched, setWatched] = useLocalStorageState([], "watched");
+  console.log(watched);
+
   // const [watched, setWatched] = useState([]);
+  /*
   const [watched, setWatched] = useState(function () {
     // when initial state depends on some sort of computation, always pass in a pure function to run
     // DONT DO THIS: useState(localStorage.getItem('watched')) because this would get called on every render
     const storedValue = localStorage.getItem("watched");
     return JSON.parse(storedValue); // need the JSON.parse because we used stringify below to
   });
+  */
 
   function handleSelectMovie(id) {
     setSelectedId((selectedId) => (id === selectedId ? null : id));
@@ -48,13 +55,6 @@ export default function App() {
   function handleDeleteWatched(id) {
     setWatched((watched) => watched.filter((movie) => movie.imdbID !== id));
   }
-
-  useEffect(
-    function () {
-      localStorage.setItem("watched", JSON.stringify(watched));
-    },
-    [watched]
-  );
 
   return (
     <>
@@ -149,6 +149,14 @@ function Search({ query, setQuery }) {
   // Can use useRef to select DOM elements
   const inputEl = useRef(null);
 
+  useKey("Enter", function () {
+    if (document.activeElement === inputEl.current) return; // Dont do anything if the user has selected the search bar and typed stuff in already
+    inputEl.current.focus();
+    setQuery("");
+  });
+
+  /* Commented out because we extracted the useKey.jsx custom hook to reuse here too
+
   // Have to do useEffect because the ref prop below in <input> element only gets added to DOM element upon mount, and useEffect also only works once DOM is loaded
   useEffect(
     function () {
@@ -166,6 +174,7 @@ function Search({ query, setQuery }) {
     },
     [setQuery]
   );
+  */
 
   /* Alternative way to use useEffect to select DOM elements, preferred to use useRef shown above
   
@@ -332,12 +341,15 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
     onCloseMovie();
   }
 
-  // If you put this useEffect in the App component then it would always listen for Escape even when no MovieDetails are showing on the right
+  useKey("Escape", onCloseMovie);
+
+  /* This was extracted into useKey.jsx
+  
   useEffect(
     function () {
       function callback(e) {
         // This function is placed here and referenced below to ensure the event listener gets removed
-        if (e.code === "Escape") {
+        if (e.code.toLowerCase() === key.toLowerCase()) { // Normal way to compare strings, Put in toLowerCase so user can type in a capital for example
           onCloseMovie();
         }
       }
@@ -351,6 +363,7 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
     },
     [onCloseMovie] // Have to use this function in the dependency array
   );
+  */
 
   useEffect(
     function () {
