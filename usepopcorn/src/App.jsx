@@ -147,7 +147,7 @@ function Logo() {
 }
 function Search({ query, setQuery }) {
   // Can use useRef to select DOM elements
-  const inputEl = useRef(null);
+  const inputEl = useRef(null); // references return an object, with current being the first key, so here {current: null}
 
   useKey("Enter", function () {
     if (document.activeElement === inputEl.current) return; // Dont do anything if the user has selected the search bar and typed stuff in already
@@ -192,7 +192,7 @@ function Search({ query, setQuery }) {
       placeholder="Search movies..."
       value={query}
       onChange={(e) => setQuery(e.target.value)}
-      ref={inputEl}
+      ref={inputEl} // When the <input> mounts in the DOM, react sets inputEl.current to point to the actual DOM node of that input element, so wouldnt be null as originally stated
     />
   );
 }
