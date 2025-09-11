@@ -986,8 +986,9 @@ Most used:
   - functions must be **pure** and return next state
 - **make sure to never mutate objects or arrays, but \***replace**\* them instead**
 
-## useRef
+# useRef
 
+- **you use useRef if you want to store data that doesnt render anything**
 - e.g. const myRef = useRef(23)
   - can then do something like this: myRef.current = 1000; // see how you can mutate this directly?
 - a box (object) with a mutable .current property that is **persisted across renders**
@@ -997,9 +998,97 @@ Most used:
 - refs are for **data that is NOT rendered**: usually only appear in event handlers or effects, not in JSX (otherwise use state)
 - do NOT read write or read .current in render logic (like state)
 
-### State vs Refs
+## State vs Refs
 
 - both persist across renders
 - refs updating dont cause re renders, state updating does
 - refs are mutable, state is immutable
 - refs arent asynchronously updated, state is
+
+# Custom hooks
+
+- e.g.
+
+```
+function useFetch(url) {
+  const [data, setData] = useState([]);
+  const [isLoading, setIsloading] = useState(false)
+
+  useEffect(function() {
+    fetch(url)
+      .then((res) => res.json())
+      .then((res) => setDate(res))
+  }, [])
+}
+
+return [data, isLoading]
+```
+
+- a custom hook is basically just a javascript function
+- you use components to resuse UI
+- you use hooks or functions to reuse logic:
+  - does logic contain any hooks?
+    - yes? use a function
+    - no? use a custom hook
+- **custom hooks allow us to reuse non visual logic in components**
+- one custom hook should have one purpose
+- rules of hooks (above) apply to custom hooks too
+
+- custom hooks need to start with 'use'
+- custom hooks need to use 1 or more react hooks (e.g. useState or useEffect)
+- unlike components, custom hooks can receive and return relevant data ([] or {})
+
+# useReducer
+
+- is basically a more advanced way of managing state than useStats, by taking in a pure function that takes in previous state and action as an argument and show the next state
+- you call the dispatch function in your handler and the argument is the action, and the first argument in the [] of the useReducer hook is the current state
+- example:
+
+```
+const [count, dispatch] = useReducer(reducer, 0);
+
+  const dec = function () {
+    dispatch({ type: "dec", payload: -1 });
+  };
+```
+
+- standard object to use in dispatch function: use type and payload
+
+```
+dispatch({ type: "xxx", payload: xxx });
+```
+
+## Why useReducer?
+
+- state management with useState isnt enough sometimes, useReducer helps in these situations:
+  1. when components have a lot of state variables and state updates, spread across many event handlers all over the component
+  2. when multiple state updates need to happen at the same time, e.g. starting a game
+  3. when updating one piece of state depends on one or multiple other pieces of state
+
+## Managing state with useReducer
+
+- alternative way of setting state for complex state
+- stores related pieces of state in a **state object**
+- useReducer needs a reducer function containing all logic to update state, this decouples state logic from component
+  - like a setState function with super powers!
+- reducer: pure function (no side effects!) that takes current state and action and returns next state
+- action: object that describes how to update state
+- dispatch: function to trigger state updates, by sending actions from event handlers to the reducer, instead of setState
+  e.g.
+
+```
+const [state, dispatch] = useReducer(reducer, initialState)
+
+function reducer(state, action) {
+  switch(action.type) {
+    case 'dec':
+      return state - 1;
+    case 'inc':
+      return state + 1;
+    case 'setCount'"
+      return action.payload;
+    default:
+      throw new Error('Unknown')
+  }
+}
+```
