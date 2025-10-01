@@ -1092,3 +1092,88 @@ function reducer(state, action) {
   }
 }
 ```
+
+## **Important - whenever you use setInterval, setTimeout, or event listeners, always return a cleanup function from useEffect!!**
+
+# UseState vs useReducer
+
+- useState:
+
+  - single independent piece of state
+  - logic to update state is placed on event handlers, **spread over one or more components**
+  - state is updated by calling setState
+  - imperative state updates
+  - easier
+
+- useReducer:
+  - ideal for multiple related pieces of state
+  - logic to update state in one central place decoupled from components
+  - state is updates by dispatching an action
+  - declarative state updates: complex state transitions are mapped to actions
+  - more difficult
+
+## When to use useReducer
+
+- one piece of state? yes - useState. no:
+
+  - do states frequently update together? (set score update along with update player along with update timer for example) no - useState
+    - willing to implement slightly more complex code? yes - useReducer
+    - over 3 or 4 pieces of unrelated state, including objects? yes - useReducer, no:
+      - too many event handlers make components large? yes - usereducer, no - useState
+
+- useState should still be **default choice**
+
+# Routing
+
+- we match different URLs to different UI views: routes
+- keeps UI in sync with current browser URL
+- this is client side routing, there is also server side routing
+- used by React Router
+- allows you to build single page applications
+
+## Single Page applications (SPA)
+
+- application that is executed entirely on client (browsers)
+- routes: different URLs
+- Javascript is used to update page DOM
+- page is never reloaded
+- feels like a native app
+- additional data might be loaded from web API
+
+## installation
+
+- run npm create vite@latest as usual
+- cd into repo, run npm i react-router-dom
+
+## Route notes
+
+- for nested routes, put index in route element to tell react to use a default child route, e.g.
+
+```
+<Route index element={xxx}>
+```
+
+## URL for state manegement
+
+- URl is great place to store UI state and an alternative to useState in some situations. examples: open/closed panels, currently selected list item, list sorting order, applied list filters
+
+1. erasy way to store in global place, accessible to all components in App
+2. good way to pass data from one page to the next
+3. makes it possible to bookmark and share the page with the exact UI state it had at the time
+   Example of React Router tools:
+   www.example.com/app/cities/lisbon?lat=1&lng=2
+
+- /app/cities is the path
+- lisbon is the params
+- lat=1&lng=2 is the query string
+
+# Fake API server
+
+- run 'npm install json-server' in repo
+- go to package.json file and add to the scripts object:
+
+```
+"server": 'json-server --watch <put your path here, e.g. data/cities> --port <Put port number here, e.g. 9000> -delay 500'
+```
+
+- enter in terminal 'npm run server'
