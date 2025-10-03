@@ -1177,3 +1177,15 @@ function reducer(state, action) {
 ```
 
 - enter in terminal 'npm run server'
+
+# Context API
+
+- solution to prop drilling
+- can avoid deeply nested state
+
+- system to pass data throughout App without manually passing props
+- 'brocasts; global state to entire app
+  1. **Provider**: gives all child components access to value
+  2. **Value:** data that we want available
+  3. **Consumers**: all components that read provided context value
+- use createContext()
