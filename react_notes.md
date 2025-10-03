@@ -1188,4 +1188,24 @@ function reducer(state, action) {
   1. **Provider**: gives all child components access to value
   2. **Value:** data that we want available
   3. **Consumers**: all components that read provided context value
-- use createContext()
+     Steps:
+
+1. set a variable to use createContext: e.g.
+
+```
+const RandomVariable.Context = createContext()
+```
+
+2. wrap a provider component around the areas you want to share the data, with a value of an object containing all the data you want to share e.g.
+
+```
+<RandomVariable.Provider value={{data1: data1,
+data2: data2,
+data3: data3}}>
+```
+
+3. in the consumer component, use useContext() to get the variable, you can destructure directly here, e.g.:
+
+```
+{destructuedVariable} = useContext(RandomVariableContext);
+```
