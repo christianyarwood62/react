@@ -1209,3 +1209,78 @@ data3: data3}}>
 ```
 {destructuedVariable} = useContext(RandomVariableContext);
 ```
+
+# State review
+
+## Types of State
+
+1. state accessibility
+
+- local state - only in 1 component
+- global state - in many components
+
+2. state domain
+
+- remote state - all app data loaded from API
+- UI state - everything else, theme, form data, list filters
+
+## State Placement Options
+
+1. local component:
+
+- tools: useState, useReducer, useRef
+- Used where: used in Local state
+
+2. Parent component
+
+- tools: useState, usereducer, useRef,
+- used where: lifting up state
+
+3. context
+
+- tools: context API + useState/useReducer
+- used where: global state (or preferably UI state)
+
+4. 3rd party library
+
+- tools: Redux, React query, SWR, etc.
+- used where: global state (remote or UI)
+
+5. URL
+
+- tools: react Router
+- used where: global state, passing between pages
+
+6. Browser:
+
+- tools: local storage, session storage
+- used where: storing data in users browser
+
+## State Management Tool options
+
+1. State accessibility
+1. UI state & Local state:
+
+
+    - useState, useReducer, useRef
+
+2. Remote State & Local state: (**Mostly in small apps**)
+
+
+    - fetch + useEffect + useState/useReducer
+
+3. Remote state & Global state:
+
+
+    - Context API + useState/useReducer
+    - Redux, recoil, etc.
+    - React query
+    - SWR
+    - RTK query
+
+4. UI state + global state:
+
+
+    - context API + useState/useReducer
+    - Redux, recoil, etc.
+    - react router
