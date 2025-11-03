@@ -1261,26 +1261,22 @@ data3: data3}}>
 1. State accessibility
 1. UI state & Local state:
 
+   - useState, useReducer, useRef
 
-    - useState, useReducer, useRef
+1. Remote State & Local state: (**Mostly in small apps**)
 
-2. Remote State & Local state: (**Mostly in small apps**)
+   - fetch + useEffect + useState/useReducer
 
+1. Remote state & Global state:
 
-    - fetch + useEffect + useState/useReducer
+   - Context API + useState/useReducer
+   - Redux, recoil, etc.
+   - React query
+   - SWR
+   - RTK query
 
-3. Remote state & Global state:
+1. UI state + global state:
 
-
-    - Context API + useState/useReducer
-    - Redux, recoil, etc.
-    - React query
-    - SWR
-    - RTK query
-
-4. UI state + global state:
-
-
-    - context API + useState/useReducer
-    - Redux, recoil, etc.
-    - react router
+   - context API + useState/useReducer
+   - Redux, recoil, etc.
+   - react router
