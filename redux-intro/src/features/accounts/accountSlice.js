@@ -2,12 +2,17 @@ const intialStateAccount = {
   balance: 0,
   loan: 0,
   loanPurpose: "",
+  isLoading: false,
 };
 
 export default function accountReducer(state = intialStateAccount, action) {
   switch (action.type) {
     case "account/deposit":
-      return { ...state, balance: state.balance + action.payload };
+      return {
+        ...state,
+        balance: state.balance + action.payload,
+        isLoading: false,
+      };
     case "account/withdraw":
       return { ...state, balance: state.balance - action.payload };
     case "account/requestLoan":
@@ -25,6 +30,8 @@ export default function accountReducer(state = intialStateAccount, action) {
         loanPurpose: "",
         balance: state.balance - state.loan,
       };
+    case "account/convertingCurrency":
+      return { ...state, isLoading: true };
 
     default:
       return state;
@@ -32,9 +39,10 @@ export default function accountReducer(state = intialStateAccount, action) {
 }
 
 export function deposit(amount, currency) {
-  if (currency === "USD") return { type: "account/deposit", payload: amount };
+  if (currency === "USD") return { type: "account/deposit" };
 
   return async function (dispatch, getState) {
+    dispatch({ type: "account/convertingCurrency", payload: true });
     // returning an API call, it knows to make that the Thunk and run this ayns func first before running dispatch
     const res = await fetch(
       `https://api.frankfurter.dev/v1/latest?base=${currency}&symbols=USD`
@@ -43,7 +51,7 @@ export function deposit(amount, currency) {
     const convertedAmount = (amount * data.rates.USD).toFixed(2);
     console.log(convertedAmount);
 
-    return dispatch({ type: "account/deposit", payload: convertedAmount });
+    dispatch({ type: "account/deposit", payload: convertedAmount });
   };
 }
 
