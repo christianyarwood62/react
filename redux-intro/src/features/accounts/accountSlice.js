@@ -13,6 +13,7 @@ const accountSlice = createSlice({
   reducers: {
     deposit(state, action) {
       state.balance += action.payload;
+      state.isLoading = false;
     },
     withdraw(state, action) {
       state.balance -= action.payload;
@@ -34,15 +35,37 @@ const accountSlice = createSlice({
         state.balance = state.balance + action.payload.amount;
       },
     },
-    payLoan(state, action) {
+    payLoan(state) {
       state.balance -= state.loan;
       state.loan = 0;
       state.loanPurpose = "";
     },
+    convertingCurrency(state) {
+      state.isLoading = true;
+    },
   },
 });
 
-export const { deposit, withdraw, requestLoan, payLoan } = accountSlice.actions; // actions is from the slice object that is created
+export const { withdraw, requestLoan, payLoan } = accountSlice.actions; // actions is from the slice object that is created
+
+// make sure the type matches the name from the accountSlice function and the reducer functions above
+export function deposit(amount, currency) {
+  if (currency === "USD") return { type: "account/deposit" };
+
+  return async function (dispatch, getState) {
+    dispatch({ type: "account/convertingCurrency", payload: true });
+    // returning an API call, it knows to make that the Thunk and run this ayns func first before running dispatch
+    const res = await fetch(
+      `https://api.frankfurter.dev/v1/latest?base=${currency}&symbols=USD`
+    );
+    const data = await res.json();
+    const convertedAmount = (amount * data.rates.USD).toFixed(2);
+    console.log(convertedAmount);
+
+    dispatch({ type: "account/deposit", payload: convertedAmount });
+  };
+}
+
 export default accountSlice.reducer;
 
 /*
