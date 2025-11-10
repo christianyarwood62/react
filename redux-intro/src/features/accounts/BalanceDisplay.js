@@ -17,4 +17,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(BalanceDisplay);
+export default connect(mapStateToProps)(BalanceDisplay); // connect allows the app to know what state is stored in store

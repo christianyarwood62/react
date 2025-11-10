@@ -31,8 +31,20 @@ export default function accountReducer(state = intialStateAccount, action) {
   }
 }
 
-export function deposit(amount) {
-  return { type: "account/deposit", payload: amount };
+export function deposit(amount, currency) {
+  if (currency === "USD") return { type: "account/deposit", payload: amount };
+
+  return async function (dispatch, getState) {
+    // returning an API call, it knows to make that the Thunk and run this ayns func first before running dispatch
+    const res = await fetch(
+      `https://api.frankfurter.dev/v1/latest?base=${currency}&symbols=USD`
+    );
+    const data = await res.json();
+    const convertedAmount = (amount * data.rates.USD).toFixed(2);
+    console.log(convertedAmount);
+
+    return dispatch({ type: "account/deposit", payload: convertedAmount });
+  };
 }
 
 export function withdraw(amount) {
